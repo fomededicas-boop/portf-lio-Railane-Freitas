@@ -23,7 +23,12 @@ const separar = grupos.length > 1;
           {g.itens.map((item, i) => (
             <li class="print anima" style={`--i:${i}`}>
               <figure>
-                <Image src={item.imagem} alt={`Print do feedback ${item.de === 'marca' ? 'da marca' : 'de'} ${item.legenda}`} width={520} densities={[1, 2]} />
+                <Image
+                  src={item.imagem}
+                  alt={`Feedback ${item.de === 'marca' ? 'da marca' : 'de'} ${item.legenda}${item.texto ? `: "${item.texto}"` : ''}`}
+                  width={520}
+                  densities={[1, 2]}
+                />
                 <figcaption>
                   <span aria-hidden="true">✦</span> {item.legenda}
                 </figcaption>

@@ -23,12 +23,7 @@ export default defineConfig({
         (fonte.italico ? ['normal', 'italic'] : ['normal']).map((estilo) => ({
           weight: peso,
           style: estilo,
-          // Fonte variável (campo `arquivo`): o mesmo arquivo serve para qualquer peso.
-          src: [
-            fonte.arquivo
-              ? `${fonte.arquivo}-${estilo}.woff2`
-              : `./node_modules/@fontsource/${pacote(fonte)}/files/${pacote(fonte)}-latin-${peso}-${estilo}.woff2`,
-          ],
+          src: [`./node_modules/@fontsource/${pacote(fonte)}/files/${pacote(fonte)}-latin-${peso}-${estilo}.woff2`],
         })),
       ),
     },

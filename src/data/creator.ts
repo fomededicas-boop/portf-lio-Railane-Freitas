@@ -275,18 +275,54 @@ export default defineCreator({
     mostrar: true,
     titulo: 'Feedbacks',
     lista: [
-      { imagem: 'feedback-domidona.jpg', legenda: 'Domidona', de: 'marca' },
-      { imagem: 'feedback-ifood.jpg', legenda: 'iFood', de: 'marca' },
-      { imagem: 'feedback-turbi.jpg', legenda: 'Turbi', de: 'marca' },
-      { imagem: 'feedback-folitrix.jpg', legenda: 'Folitrix', de: 'marca' },
-      { imagem: 'feedback-coala.jpg', legenda: 'Coala', de: 'marca' },
-      { imagem: 'feedback-alimentos-cacarola.jpg', legenda: 'Arroz Caçarola', de: 'marca' },
-      { imagem: 'feedback-kbell.jpg', legenda: 'K-Bell', de: 'marca' },
-      { imagem: 'feedback-um-presente-cantado.jpg', legenda: 'Um Presente Cantado', de: 'marca' },
-      { imagem: 'feedback-sette-restaurante.png', legenda: 'Sette Restaurante', de: 'marca' },
-      { imagem: 'feedback-seguidora-3.jpg', legenda: 'Seguidora', de: 'seguidor' },
-      { imagem: 'feedback-seguidora-2.jpg', legenda: 'Seguidora', de: 'seguidor' },
-      { imagem: 'feedback-seguidora.jpg', legenda: 'Seguidora', de: 'seguidor' },
+      {
+        imagem: 'feedback-domidona.jpg', legenda: 'Domidona', de: 'marca',
+        texto: 'Super profissional e comprometida! Cumpriu o prazo e entregou um conteúdo que ficou ainda melhor do que esperávamos',
+      },
+      {
+        imagem: 'feedback-ifood.jpg', legenda: 'iFood', de: 'marca',
+        texto: 'Foi uma ótima parceria! A entrega ficou bem alinhada com o que pedimos e tivemos uma troca super tranquila durante o processo.',
+      },
+      {
+        imagem: 'feedback-turbi.jpg', legenda: 'Turbi', de: 'marca',
+        texto: 'Rai fez uma entrega muito ágil e seguindo perfeitamente o briefing. Adoramos o vídeo!',
+      },
+      {
+        imagem: 'feedback-folitrix.jpg', legenda: 'Folitrix', de: 'marca',
+        texto: 'Adoramos o resultado do vídeo! Passou perfeitamente a mensagem no tempo proposto, ótima iluminação e cenário.',
+      },
+      {
+        imagem: 'feedback-coala.jpg', legenda: 'Coala', de: 'marca',
+        texto: 'Railane conseguiu superar nossas expectativas! Seguiu exatamente o que pedimos e o resultado ficou incrível!',
+      },
+      {
+        imagem: 'feedback-alimentos-cacarola.jpg', legenda: 'Arroz Caçarola', de: 'marca',
+        texto: 'Trabalhar com a Railane foi demais! Super criativa e dedicada',
+      },
+      {
+        imagem: 'feedback-kbell.jpg', legenda: 'K-Bell', de: 'marca',
+        texto: 'Foi muito trabalhar com a Railane, muito competente, uma ótima oratória, e bons feedbacks.',
+      },
+      {
+        imagem: 'feedback-um-presente-cantado.jpg', legenda: 'Um Presente Cantado', de: 'marca',
+        texto: 'A Railane foi incrível, além de extremamente rápida! Recomendo!',
+      },
+      {
+        imagem: 'feedback-sette-restaurante.png', legenda: 'Sette Restaurante', de: 'marca',
+        texto: 'Oi Railane, tudo bom? Amamos o vídeo postado, bem editado e com os melhores takes. Gostamos muito mesmo',
+      },
+      {
+        imagem: 'feedback-seguidora-3.jpg', legenda: 'Seguidora', de: 'seguidor',
+        texto: 'Vim passar a minha lua de mel na pousada de Imbassaí que vc deu a dica esse ano, muito obrigada pela dica. Que Deus abençoe seu trabalho que sempre contribui com dicas top. Muito importante para nós.',
+      },
+      {
+        imagem: 'feedback-seguidora-2.jpg', legenda: 'Seguidora', de: 'seguidor',
+        texto: 'Boa noite gatinha!! Fechei o serviço da minha casa com Léo tbm!! Obrigada pelas dicas de blogueira!! Pego várias!!',
+      },
+      {
+        imagem: 'feedback-seguidora.jpg', legenda: 'Seguidora', de: 'seguidor',
+        texto: 'Boa!!! Vc com as melhores dicas sempre',
+      },
     ],
   },
 

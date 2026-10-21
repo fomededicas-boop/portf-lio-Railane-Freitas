@@ -14,8 +14,8 @@ const h = (type: string, style: Record<string, unknown>, ...children: (No | stri
   props: { style, children },
 });
 
-// As imagens usam o .woff estático do pacote @fontsource (o gerador não lê .woff2 nem fonte
-// variável); fonte com `estatica` usa o pacote dela (ex.: Fraunces Soft → Fraunces).
+// As imagens usam o .woff do pacote @fontsource (o gerador não lê .woff2); fonte com `estatica`
+// usa o pacote dela (ex.: Bodoni Moda Bold → bodoni-moda).
 const pacote = (fonte: { nome: string; estatica?: string }) => fonte.estatica ?? fonte.nome.toLowerCase().replaceAll(' ', '-');
 const arquivoDaFonte = (fonte: { nome: string; estatica?: string }, peso: number, estilo: 'normal' | 'italic') =>
   readFile(join(process.cwd(), 'node_modules/@fontsource', pacote(fonte), 'files', `${pacote(fonte)}-latin-${peso}-${estilo}.woff`));

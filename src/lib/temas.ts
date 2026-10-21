@@ -14,13 +14,6 @@ export const FONTES = {
   dmSans: { nome: 'DM Sans', pesos: [400, 600], italico: false, generica: 'sans-serif' },
   barlowCondensed: { nome: 'Barlow Condensed', pesos: [700], italico: true, generica: 'sans-serif' },
   barlow: { nome: 'Barlow', pesos: [400, 600], italico: false, generica: 'sans-serif' },
-  // Fraunces com o eixo "Soft" (letras arredondadas), num arquivo só que vai do peso 100 ao 900 (Black).
-  // `arquivo`: fonte variável do pacote @fontsource-variable, sem o "-normal.woff2"/"-italic.woff2".
-  // `estatica`: pacote @fontsource usado na prévia do WhatsApp e no ícone (que não leem fonte variável).
-  frauncesSoft: {
-    nome: 'Fraunces Soft', pesos: [900], italico: true, generica: 'serif',
-    arquivo: './node_modules/@fontsource-variable/fraunces/files/fraunces-latin-soft', estatica: 'fraunces',
-  },
   montserrat: { nome: 'Montserrat', pesos: [400, 600], italico: false, generica: 'sans-serif' },
   // Bodoni Moda em negrito (a do tema 'noite' é a mais fina). Mesmo pacote, por isso o `estatica`.
   bodoniForte: { nome: 'Bodoni Moda Bold', pesos: [700], italico: true, generica: 'serif', estatica: 'bodoni-moda' },

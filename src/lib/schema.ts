@@ -189,6 +189,7 @@ export const esquema = z
           z.strictObject({
             imagem: imagem('do print do {item}'),
             legenda: texto('faltou de quem é o {item} (ex.: o nome da marca)'),
+            texto: opcional,
             de: z.enum(['marca', 'seguidor'], { error: 'o campo "de" do {item} pode ser "marca" ou "seguidor"' }).default('marca'),
           }),
         )
