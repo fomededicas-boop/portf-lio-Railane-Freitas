@@ -218,11 +218,42 @@ const nomesDosTemas: Record<string, string> = { revista: 'Revista', noite: 'Noit
     border-bottom: 4px solid #c9a956;
   }
 
-  /* Railane: fio verde e rosa embaixo do topo laranja, e detalhes em verde, rosa e creme. */
+  /* Railane: topo em degradê terracota (o texto creme passa em 4,5:1 em todos os tons), fio verde
+     e rosa embaixo dele, e a foto em arco com forma verde, contorno creme e um selo girando. */
   html[data-tema='railane'] .topo {
+    background: linear-gradient(150deg, #a34e30 0%, #9a5450 55%, #7e4a3e 100%);
     border-bottom: 6px solid;
     border-image: linear-gradient(to right, #6f7f6a 0 50%, #a86d6d 50% 100%) 1;
   }
+  html[data-tema='railane'] .topo .foto {
+    position: relative;
+    isolation: isolate;
+    margin-top: 0.75rem;
+  }
+  html[data-tema='railane'] .topo .foto img {
+    border-radius: 999px 999px 24px 24px;
+  }
+  /* Forma verde deslocada atrás da foto e um contorno creme solto, como moldura. */
+  html[data-tema='railane'] .topo .foto::before,
+  html[data-tema='railane'] .topo .foto::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: 999px 999px 24px 24px;
+  }
+  html[data-tema='railane'] .topo .foto::before {
+    background: #6f7f6a;
+    transform: translate(16px, 16px);
+  }
+  html[data-tema='railane'] .topo .foto::after {
+    border: 2px solid #e8ded3;
+    transform: translate(-12px, -12px);
+  }
+  html[data-tema='railane'] .topo .selo {
+    display: block;
+  }
+
   html[data-tema='railane'] #marcas li {
     border-color: #e8ded3;
     box-shadow: 0 0 0 3px #e8ded3;
