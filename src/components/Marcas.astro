@@ -1,23 +1,73 @@
 ---
-// Marcas com quem já trabalhou. Com logo, viram cartões brancos (funcionam em qualquer tema
-// e com logos coloridos); sem nenhum logo, aparecem só os nomes.
-import { Image } from 'astro:assets';
+// Marcas com quem já trabalhou. Com logo, viram círculos numa faixa que passa sozinha
+// para o lado, em looping; sem nenhum logo, aparecem só os nomes.
+import { join } from 'node:path';
+import sharp from 'sharp';
 import Cabecalho from './Cabecalho.astro';
+import creator from '../data/creator';
+import { caminhoDaImagem } from '../lib/schema';
 import { c } from '../lib/site';
 
 const marcas = c.marcas!;
 const temLogo = marcas.lista.some((m) => m.logo);
+
+/**
+ * Prepara a logo para o círculo: acha onde está o desenho (cortando o fundo de uma cor só),
+ * aumenta até o desenho caber inteiro dentro do círculo e completa o resto com a cor de
+ * fundo da própria logo. Fundo transparente vira branco. Assim o círculo fica todo
+ * preenchido e nenhuma parte da logo é cortada.
+ */
+async function logoNoCirculo(nome: string) {
+  const arquivo = join(process.cwd(), caminhoDaImagem(nome)!.slice(1));
+  const { data } = await sharp(arquivo).ensureAlpha().extract({ left: 0, top: 0, width: 1, height: 1 }).raw().toBuffer({ resolveWithObject: true });
+  const fundo = data[3] < 128 ? { r: 255, g: 255, b: 255 } : { r: data[0], g: data[1], b: data[2] };
+  const { data: desenho, info } = await sharp(await sharp(arquivo).flatten({ background: fundo }).toBuffer())
+    .trim({ background: fundo, threshold: 24 })
+    .toBuffer({ resolveWithObject: true });
+  // O desenho cabe no círculo quando a diagonal dele é menor que o diâmetro (com uma folguinha).
+  const lado = Math.ceil(Math.hypot(info.width, info.height) * 1.08);
+  const sobraX = lado - info.width;
+  const sobraY = lado - info.height;
+  // Em passos separados: no mesmo passo, o sharp diminuiria antes de completar o fundo.
+  const quadrada = await sharp(desenho)
+    .extend({ left: sobraX >> 1, right: sobraX - (sobraX >> 1), top: sobraY >> 1, bottom: sobraY - (sobraY >> 1), background: fundo })
+    .toBuffer();
+  const pronta = await sharp(quadrada)
+    .resize(224, 224)
+    .webp({ quality: 88 })
+    .toBuffer();
+  return { src: `data:image/webp;base64,${pronta.toString('base64')}`, cor: `rgb(${fundo.r} ${fundo.g} ${fundo.b})` };
+}
+
+const logos = temLogo
+  ? await Promise.all(creator.marcas!.lista.map((m) => (m.logo ? logoNoCirculo(m.logo) : null)))
+  : [];
+// Velocidade constante: cada marca leva o mesmo tempo para passar, com poucas ou muitas marcas.
+const duracao = `${marcas.lista.length * 3}s`;
 ---
 
 <section class="secao recuo" id="marcas" aria-labelledby="marcas-titulo">
   <Cabecalho rotulo="Marcas" titulo={marcas.titulo} id="marcas-titulo" />
   {
     temLogo ? (
-      <ul class="cartoes">
-        {marcas.lista.map((m) => (
-          <li>{m.logo ? <Image src={m.logo} alt={m.nome} height={56} densities={[1, 2]} /> : <span>{m.nome}</span>}</li>
-        ))}
-      </ul>
+      <div class="faixa">
+        {/* A lista aparece duas vezes para o looping não ter emenda; a cópia fica escondida dos leitores de tela. */}
+        <div class="trilho" style={`--duracao: ${duracao}`}>
+          {[false, true].map((copia) => (
+            <ul class="circulos" aria-hidden={copia ? 'true' : undefined}>
+              {marcas.lista.map((m, i) => (
+                <li title={m.nome} style={logos[i] ? `background: ${logos[i].cor}` : undefined}>
+                  {logos[i] ? (
+                    <img src={logos[i].src} alt={copia ? '' : m.nome} width="112" height="112" loading="lazy" decoding="async" />
+                  ) : (
+                    <span>{m.nome}</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          ))}
+        </div>
+      </div>
     ) : (
       <ul class="nomes">
         {marcas.lista.map((m) => (
@@ -29,29 +79,67 @@ const temLogo = marcas.lista.some((m) => m.logo);
 </section>
 
 <style>
-  .cartoes {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
-    gap: 0.75rem;
+  .faixa {
+    overflow: hidden;
+    /* Some suavemente nas bordas, em vez de cortar o círculo seco. */
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
   }
-  .cartoes li {
+  .trilho {
+    display: flex;
+    width: max-content;
+    animation: passar var(--duracao) linear infinite;
+  }
+  .faixa:hover .trilho {
+    animation-play-state: paused;
+  }
+  .circulos {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem 0.5rem 0.5rem 0;
+    margin-right: 0.5rem;
+  }
+  .circulos li {
+    flex: none;
     display: grid;
     place-items: center;
-    aspect-ratio: 5 / 3;
-    padding: 1rem 1.25rem;
-    border: 1px solid var(--linha);
-    border-radius: max(var(--raio), 12px);
+    width: 7rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    overflow: hidden;
     background: #fff;
+    border: 1px solid var(--linha);
     color: #1a1a1a;
     font-weight: 600;
+    font-size: 0.8rem;
     text-align: center;
+    padding: 0;
   }
-  .cartoes :global(img) {
-    width: auto;
-    max-width: 100%;
-    height: auto;
-    max-height: 3.5rem;
-    object-fit: contain;
+  .circulos img {
+    width: 100%;
+    height: 100%;
+  }
+  @keyframes passar {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  /* Para quem pede menos movimento no celular/computador: faixa parada, dá para arrastar. */
+  @media (prefers-reduced-motion: reduce) {
+    .faixa {
+      overflow-x: auto;
+      mask-image: none;
+    }
+    .trilho {
+      animation: none;
+    }
+    .circulos[aria-hidden] {
+      display: none;
+    }
+  }
+  @media (max-width: 759px) {
+    .circulos li {
+      width: 5.5rem;
+    }
   }
   .nomes {
     font-family: var(--f-titulo);
