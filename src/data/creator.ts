@@ -26,9 +26,8 @@ export default defineCreator({
 
   // Endereço do site, ex.: 'https://portfolio-ugc.seunome.workers.dev' ou, com domínio
   // próprio, 'https://www.seunome.com.br'. Aparece na Cloudflare, na página do projeto.
-  // Sem ele, a prévia do link no WhatsApp fica sem foto. Este é o do site de demonstração:
-  // troque pelo seu.
-  endereco: 'https://portfolio-ugc.bruno-esposito.workers.dev',
+  // Sem ele, a prévia do link no WhatsApp fica sem foto.
+  endereco: 'https://portf-lio-railane-freitas.fomededicas.workers.dev',
 
   // Onde ficam os vídeos e as capas:
   //   'local' → na pasta public/videos, junto com o site. Não precisa de cartão nem de
