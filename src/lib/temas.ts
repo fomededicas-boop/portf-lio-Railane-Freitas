@@ -14,6 +14,16 @@ export const FONTES = {
   dmSans: { nome: 'DM Sans', pesos: [400, 600], italico: false, generica: 'sans-serif' },
   barlowCondensed: { nome: 'Barlow Condensed', pesos: [700], italico: true, generica: 'sans-serif' },
   barlow: { nome: 'Barlow', pesos: [400, 600], italico: false, generica: 'sans-serif' },
+  // Fraunces com o eixo "Soft" (letras arredondadas), num arquivo só que vai do peso 100 ao 900 (Black).
+  // `arquivo`: fonte variável do pacote @fontsource-variable, sem o "-normal.woff2"/"-italic.woff2".
+  // `estatica`: pacote @fontsource usado na prévia do WhatsApp e no ícone (que não leem fonte variável).
+  frauncesSoft: {
+    nome: 'Fraunces Soft', pesos: [900], italico: true, generica: 'serif',
+    arquivo: './node_modules/@fontsource-variable/fraunces/files/fraunces-latin-soft', estatica: 'fraunces',
+  },
+  montserrat: { nome: 'Montserrat', pesos: [400, 600], italico: false, generica: 'sans-serif' },
+  // Bodoni Moda em negrito (a do tema 'noite' é a mais fina). Mesmo pacote, por isso o `estatica`.
+  bodoniForte: { nome: 'Bodoni Moda Bold', pesos: [700], italico: true, generica: 'serif', estatica: 'bodoni-moda' },
 } as const;
 
 export type ChaveFonte = keyof typeof FONTES;
@@ -55,8 +65,8 @@ export const TEMAS = {
   // fundo creme (#E8DED3 clareado), fio verde (#6F7F6A) e rosa (#A86D6D) embaixo do topo e o
   // laranja (#E75C16) só num detalhe do selo. Verde, rosa e laranja não passam no contraste como texto.
   railane: {
-    fundo: '#F6F2ED', texto: '#1F1A17', destaque: '#B44F27', titulo: 'dmSerif', corpo: 'dmSans',
-    peso: 400, caixa: 'none', espacamento: '-0.01em', raio: '14px', escala: 0.95, letra: 0.6, topoNaCampanha: false, corDoTopo: '#BE5428',
+    fundo: '#F6F2ED', texto: '#1F1A17', destaque: '#B44F27', titulo: 'bodoniForte', corpo: 'montserrat',
+    peso: 700, caixa: 'none', espacamento: '-0.015em', raio: '14px', escala: 1, letra: 0.64, topoNaCampanha: false, corDoTopo: '#BE5428',
   },
 } as const satisfies Record<
   string,

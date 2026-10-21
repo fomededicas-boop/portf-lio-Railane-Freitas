@@ -10,6 +10,7 @@
     "comprimir": "node scripts/comprimir.mjs"
   },
   "dependencies": {
+    "@fontsource-variable/fraunces": "^5.3.0",
     "@fontsource/barlow": "^5.3.0",
     "@fontsource/barlow-condensed": "^5.3.0",
     "@fontsource/bodoni-moda": "^5.3.0",
@@ -19,10 +20,12 @@
     "@fontsource/fraunces": "^5.3.0",
     "@fontsource/instrument-sans": "^5.3.0",
     "@fontsource/inter": "^5.3.0",
+    "@fontsource/montserrat": "^5.3.0",
     "@fontsource/young-serif": "^5.3.0",
     "astro": "^7.4.1",
     "satori": "^0.63.2",
-    "sharp": "^0.35.5"
+    "sharp": "^0.35.5",
+    "simple-icons": "^16.35.0"
   },
   "engines": {
     "node": ">=22.22.0"

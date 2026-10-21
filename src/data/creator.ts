@@ -64,6 +64,9 @@ export default defineCreator({
     foto: 'foto-perfil.png',
     // Descreva a foto em poucas palavras. É lido em voz alta para pessoas cegas.
     fotoDescricao: 'Railane sorrindo, de blusa terracota, com as mãos na frente do corpo',
+    // Opcional: a mesma foto recortada, sem fundo (PNG). Com ela, a foto aparece saindo da
+    // moldura em arco. Para voltar à foto normal, apague esta linha.
+    fotoRecortada: 'foto-recortada.png',
     // Seu nicho em uma linha. Aparece em letras pequenas acima do nome.
     nicho: 'Lifestyle, Casa & Decor, gastronomia',
     // O que você faz, em poucas palavras. Aparece no alto do topo, no selo da foto e no título da aba.
@@ -72,7 +75,7 @@ export default defineCreator({
     bio: 'Creator que transforma produto em experiência e trata cada entrega como uma história de marca.',
     botao: {
       // Texto do botão principal.
-      texto: 'Quero um orçamento',
+      texto: 'Quero criar com você',
       // Para onde o botão leva: 'whatsapp', 'email' ou 'instagram'.
       // Precisa estar preenchido lá embaixo, em CONTATO.
       abre: 'whatsapp',
@@ -85,14 +88,87 @@ export default defineCreator({
   // os arquivos de videos-prontos para o bucket. Depois copie um bloco { ... } abaixo.
   // A ordem aqui é a ordem no site.
   videos: {
-    mostrar: false,
-    titulo: 'Vídeos',
-    // Opcional: uma frase antes dos vídeos.
-    texto: 'Vídeos curtos para anúncio e redes sociais, separados por nicho.',
+    mostrar: true,
+    titulo: 'Navegue pelos meus nichos',
+    // Opcional: uma frase antes dos vídeos, ex.: texto: 'Vídeos curtos para anúncio e redes sociais.',
     // true: os vídeos tocam sem som enquanto aparecem na tela (a marca toca para ouvir).
     // false: ficam parados mostrando a capa até alguém tocar.
-    previaAutomatica: true,
-    lista: [],
+    previaAutomatica: false,
+    // Seus nichos, na ordem dos atalhos no alto da seção (cada atalho leva direto aos vídeos
+    // daquele nicho). Cada vídeo usa um destes nomes no campo `nicho`. Nicho sem vídeo não aparece.
+    nichos: [
+      'Campanhas promocionais',
+      'Casa e decoração',
+      'Casal',
+      'Tech',
+      'Serviços digitais',
+      'Educacional',
+      'Haircare',
+      'Skincare',
+      'Bodycare & fragrâncias',
+      'Bem-estar',
+      'Moda & acessórios',
+      'Fitness',
+      'Gastronomia & culinária',
+      'Restaurantes',
+      'Experiências',
+    ],
+    lista: [
+      { arquivo: 'kopenhagen-dia-das-maes.mp4', marca: 'Kopenhagen', formato: 'Dia das Mães', nicho: 'Campanhas promocionais', duracao: '0:43', autoral: false },
+      { arquivo: 'nestle-mercado-promocao.mp4', marca: 'Nestlé', formato: 'Promoção', nicho: 'Campanhas promocionais', duracao: '0:49', autoral: false },
+      { arquivo: 'nestle-documentario-cafe.mp4', marca: 'Nestlé', formato: 'Documentário', nicho: 'Campanhas promocionais', duracao: '1:05', autoral: false },
+      { arquivo: 'oboticario-vlog-promocao.mp4', marca: 'O Boticário', formato: 'Vlog', nicho: 'Campanhas promocionais', duracao: '0:55', autoral: false },
+      { arquivo: 'promocao-ype.mp4', marca: 'Ypê', formato: 'Promoção', nicho: 'Campanhas promocionais', duracao: '0:59', autoral: false },
+      { arquivo: 'dove-repara-no-glow.mp4', marca: 'Dove', formato: 'Promoção', nicho: 'Campanhas promocionais', duracao: '1:18', autoral: false },
+      { arquivo: 'rexona-mascote-fenomenal.mp4', marca: 'Rexona', formato: 'Promoção', nicho: 'Campanhas promocionais', duracao: '0:59', autoral: false },
+      { arquivo: 'coala-casa.mp4', marca: 'Coala', formato: 'UGC', nicho: 'Casa e decoração', duracao: '0:25', autoral: false },
+      { arquivo: 'coala-personalidades.mp4', marca: 'Coala', formato: 'UGC', nicho: 'Casa e decoração', duracao: '0:23', autoral: false },
+      { arquivo: 'cha-branco-casa.mp4', marca: 'Coala', formato: 'UGC', nicho: 'Casa e decoração', duracao: '0:15', autoral: false },
+      { arquivo: 'organico-coala.mp4', marca: 'Coala', formato: 'UGC', nicho: 'Casa e decoração', duracao: '0:35', autoral: false },
+      { arquivo: 'bendita-canfora-casa.mp4', marca: 'Bendita Cânfora', formato: 'UGC', nicho: 'Casa e decoração', duracao: '0:36', autoral: false },
+      { arquivo: 'cif-casa.mp4', marca: 'Cif', formato: 'UGC', nicho: 'Casa e decoração', duracao: '0:29', autoral: false },
+      { arquivo: 'hoomy-toalha.mp4', marca: 'Hoomy', formato: 'UGC', nicho: 'Casa e decoração', duracao: '0:48', autoral: false },
+      { arquivo: 'lavanderia-dica.mp4', marca: 'Comfort', formato: 'Dica', nicho: 'Casa e decoração', duracao: '0:52', autoral: true },
+      { arquivo: 'tech-inter.mp4', marca: 'Inter', formato: 'UGC', nicho: 'Tech', duracao: '1:03', autoral: false },
+      { arquivo: 'ifood-tech.mp4', marca: 'iFood', formato: 'UGC', nicho: 'Tech', duracao: '0:31', autoral: false },
+      { arquivo: 'shopee-tech-casa.mp4', marca: 'Shopee', formato: 'UGC', nicho: 'Tech', duracao: '0:46', autoral: false },
+      { arquivo: 'app-waze.mp4', marca: 'Waze', formato: 'App', nicho: 'Tech', duracao: '0:59', autoral: false },
+      { arquivo: 'duo-gourmet-tech.mp4', marca: 'Duo Gourmet', formato: 'UGC', nicho: 'Tech', duracao: '1:01', autoral: false },
+      { arquivo: 'ugc-duo-gourmet-app.mp4', marca: 'Duo Gourmet', formato: 'App', nicho: 'Tech', duracao: '1:01', autoral: false },
+      { arquivo: 'tech-trinta.mp4', marca: 'Trinta', formato: 'UGC', nicho: 'Tech', duracao: '0:29', autoral: false },
+      { arquivo: 'tech-turbi.mp4', marca: 'Turbi', formato: 'UGC', nicho: 'Tech', duracao: '0:30', autoral: false },
+      { arquivo: 'branding-clinica-estetica.mp4', marca: 'Laser Dream', formato: 'Branding', nicho: 'Serviços digitais', duracao: '1:01', autoral: false },
+      { arquivo: 'musica-personalizada-amiga.mp4', marca: 'Um Presente Cantado', formato: 'UGC', nicho: 'Serviços digitais', duracao: '1:56', autoral: false },
+      { arquivo: 'sheerme-app-experiencia.mp4', marca: 'SheerMe', formato: 'Experiência', nicho: 'Serviços digitais', duracao: '1:11', autoral: false },
+      { arquivo: 'educacao-mentoria-camila.mp4', marca: 'Destrava UGC', formato: 'Mentoria', nicho: 'Educacional', duracao: '2:15', autoral: false },
+      { arquivo: 'dove-storytelling-haicare.mp4', marca: 'Dove', formato: 'Storytelling', nicho: 'Haircare', duracao: '0:49', autoral: false },
+      { arquivo: 'react-haicare.mp4', marca: "Elseve (L'Oréal)", formato: 'UGC', nicho: 'Haircare', duracao: '0:56', autoral: false },
+      { arquivo: 'pantene-haircare.mp4', marca: 'Pantene', formato: 'UGC', nicho: 'Haircare', duracao: '0:26', autoral: false },
+      { arquivo: 'natura-haircare.mp4', marca: 'Natura', formato: 'UGC', nicho: 'Haircare', duracao: '0:58', autoral: false },
+      { arquivo: 'haircare-folitrix.mp4', marca: 'Folitrix', formato: 'UGC', nicho: 'Haircare', duracao: '0:35', autoral: false },
+      { arquivo: 'haircare-loveme.mp4', marca: 'Love Me', formato: 'UGC', nicho: 'Haircare', duracao: '0:39', autoral: false },
+      { arquivo: 'kbell-haircare.mp4', marca: 'K-Bell', formato: 'UGC', nicho: 'Haircare', duracao: '1:05', autoral: false },
+      { arquivo: 'oboticario-skincare.mp4', marca: 'O Boticário', formato: 'UGC', nicho: 'Skincare', duracao: '1:26', autoral: false },
+      { arquivo: 'neutrogena-protetor-solar-vlog.mp4', marca: 'Neutrogena', formato: 'Vlog', nicho: 'Skincare', duracao: '1:02', autoral: false },
+      { arquivo: 'avon-protetor-solar.mp4', marca: 'Avon', formato: 'UGC', nicho: 'Skincare', duracao: '0:27', autoral: false },
+      { arquivo: 'maybelline-beleza.mp4', marca: 'Maybelline', formato: 'UGC', nicho: 'Skincare', duracao: '0:46', autoral: false },
+      { arquivo: 'natura-bodycare.mp4', marca: 'Natura', formato: 'UGC', nicho: 'Bodycare & fragrâncias', duracao: '0:45', autoral: false },
+      { arquivo: 'secret-bodycare.mp4', marca: 'Secret', formato: 'UGC', nicho: 'Bodycare & fragrâncias', duracao: '0:37', autoral: false },
+      { arquivo: 'domidona-mule.mp4', marca: 'Domidona', formato: 'UGC', nicho: 'Moda & acessórios', duracao: '0:50', autoral: false },
+      { arquivo: 'domidona-tamanco-jelly.mp4', marca: 'Domidona', formato: 'UGC', nicho: 'Moda & acessórios', duracao: '0:33', autoral: false },
+      { arquivo: 'moda-duones.mp4', marca: 'Duones', formato: 'UGC', nicho: 'Moda & acessórios', duracao: '1:13', autoral: false },
+      { arquivo: 'fitness-roupa-academia.mp4', marca: 'Roupa de academia', formato: 'UGC', nicho: 'Fitness', duracao: '0:59', autoral: true },
+      { arquivo: 'culinaria-maggi-airfryer.mp4', marca: 'Maggi', formato: 'Receita', nicho: 'Gastronomia & culinária', duracao: '0:42', autoral: false },
+      { arquivo: 'culinaria-maggi-marmitas.mp4', marca: 'Maggi', formato: 'Receita', nicho: 'Gastronomia & culinária', duracao: '0:54', autoral: false },
+      { arquivo: 'gastronomia-momento-meu.mp4', marca: 'Momento Meu', formato: 'UGC', nicho: 'Gastronomia & culinária', duracao: '1:01', autoral: false },
+      { arquivo: 'culinaria-receita-mocha.mp4', marca: 'Receita de mocha', formato: 'Receita', nicho: 'Gastronomia & culinária', duracao: '1:07', autoral: true },
+      { arquivo: 'gastronomia-restaurante.mp4', marca: 'Oxente Bar e Petiscaria', formato: 'Experiência', nicho: 'Restaurantes', duracao: '0:42', autoral: false },
+      { arquivo: 'feijoada-experiencia.mp4', marca: 'Sabor de Casa', formato: 'Experiência', nicho: 'Restaurantes', duracao: '1:14', autoral: false },
+      { arquivo: 'experiencia-restaurante-koreano.mp4', marca: 'Kion Korean Cuisine', formato: 'Experiência', nicho: 'Restaurantes', duracao: '0:52', autoral: true },
+      { arquivo: 'experiencia-wellhub-app.mp4', marca: 'Wellhub', formato: 'App', nicho: 'Experiências', duracao: '0:58', autoral: false },
+      { arquivo: 'topo-funil-experiencia-hospedagem.mp4', marca: 'Vila Cabana', formato: 'Experiência', nicho: 'Experiências', duracao: '0:47', autoral: true },
+      { arquivo: 'sebo-dica.mp4', marca: 'Sebo de Salém', formato: 'Dica', nicho: 'Experiências', duracao: '0:44', autoral: false },
+    ],
   },
 
   // ── CAMPANHA SAZONAL ───────────────────────────────────────────────────────
@@ -136,7 +212,7 @@ export default defineCreator({
   // em cartões brancos; sem logo, aparece o nome.
   marcas: {
     mostrar: true,
-    titulo: 'Marcas com quem já trabalhei',
+    titulo: 'Marcas que criaram comigo',
     lista: [
       { nome: 'Dove', logo: 'logo-dove.png' },
       { nome: 'Nestlé', logo: 'logo-nestle.jpg' },
@@ -152,6 +228,65 @@ export default defineCreator({
       { nome: 'Duo Gourmet', logo: 'logo-duo-gourmet.png' },
       { nome: 'Hoomy', logo: 'logo-hoomy.png' },
       { nome: 'Seu Influencer UGC', logo: 'logo-seu-influencer.png' },
+    ],
+  },
+
+  // ── SOBRE ──────────────────────────────────────────────────────────────────
+  // Um "sobre mim" em colagem: frases curtas em bilhetinhos e dois papéis com as suas skills.
+  sobre: {
+    mostrar: true,
+    titulo: 'Sobre mim',
+    // A frase grande do meio e o apelido escrito em cima dela.
+    chamada: 'Oi, eu sou Railane',
+    apelido: 'sua creator favorita',
+    // Foto do meio da colagem (arquivo em src/imagens) e o que aparece nela.
+    foto: 'oi-eu-sou-railane.png',
+    fotoDescricao: 'Railane em pé, sorrindo, com a mão no bolso, em tons de rosa e terracota',
+    // Até 2 fotos recortadas (sem fundo) que ficam dos lados da foto do meio.
+    laterais: [
+      { foto: 'sua-creator-favorita-sem-fundo.png', descricao: 'Railane sorrindo, em preto e branco' },
+      { foto: 'cacheada-transicao-em-2022-sem-fundo.png', descricao: 'Railane sentada no chão, sorrindo, de roupa preta' },
+    ],
+    // Frases. `destaque` aparece em negrito; `fotos` (até 2) viram círculos. As frases sem foto
+    // (até 3) ficam em volta das fotos do meio: a 1ª em cima à esquerda, a 2ª em cima à direita
+    // e a 3ª embaixo. As outras ficam dos lados.
+    fatos: [
+      { destaque: 'Criadora de conteúdo', texto: 'desde 2018', fotos: ['creator-desde-2018.png'] },
+      { destaque: 'Pisciana', texto: '31 anos' },
+      { destaque: 'Soteropolitana', texto: 'casada', fotos: ['soteropolitana-casa.png'] },
+      { destaque: 'Cacheada', texto: 'transição capilar em 2022' },
+      { destaque: 'Farmacêutica', texto: 'de profissão' },
+      { destaque: 'Ama viajar', texto: 'e viver novas experiências', fotos: ['ama-viajar-e-viver-experiencias-sem-fundo.png'] },
+      {
+        destaque: 'Equilíbrio',
+        texto: 'entre vida saudável e prazerosa',
+        fotos: ['equilibrio-vida-saudavel-sem-fundo.png', 'equilibrio-vida-prazerosa-sem-fundo.png'],
+      },
+      { destaque: 'Construindo', texto: 'o lar dos meus sonhos', fotos: ['construindo-o-lar.png'] },
+    ],
+    softSkills: ['Criatividade', 'Comunicação assertiva', 'Naturalidade', 'Responsabilidade'],
+    hardSkills: ['Curadoria de experiências', 'Copy com foco em conversão', 'Storytelling estratégico', 'Conteúdo orgânico'],
+  },
+
+  // ── FEEDBACKS ──────────────────────────────────────────────────────────────
+  // Prints de avaliações (arquivo em src/imagens). `de`: 'marca' ou 'seguidor'.
+  // A ordem aqui é a ordem no site.
+  feedbacks: {
+    mostrar: true,
+    titulo: 'Feedbacks',
+    lista: [
+      { imagem: 'feedback-domidona.jpg', legenda: 'Domidona', de: 'marca' },
+      { imagem: 'feedback-ifood.jpg', legenda: 'iFood', de: 'marca' },
+      { imagem: 'feedback-turbi.jpg', legenda: 'Turbi', de: 'marca' },
+      { imagem: 'feedback-folitrix.jpg', legenda: 'Folitrix', de: 'marca' },
+      { imagem: 'feedback-coala.jpg', legenda: 'Coala', de: 'marca' },
+      { imagem: 'feedback-alimentos-cacarola.jpg', legenda: 'Arroz Caçarola', de: 'marca' },
+      { imagem: 'feedback-kbell.jpg', legenda: 'K-Bell', de: 'marca' },
+      { imagem: 'feedback-um-presente-cantado.jpg', legenda: 'Um Presente Cantado', de: 'marca' },
+      { imagem: 'feedback-sette-restaurante.png', legenda: 'Sette Restaurante', de: 'marca' },
+      { imagem: 'feedback-seguidora-3.jpg', legenda: 'Seguidora', de: 'seguidor' },
+      { imagem: 'feedback-seguidora-2.jpg', legenda: 'Seguidora', de: 'seguidor' },
+      { imagem: 'feedback-seguidora.jpg', legenda: 'Seguidora', de: 'seguidor' },
     ],
   },
 
@@ -209,6 +344,9 @@ export default defineCreator({
   contato: {
     titulo: 'Vamos criar juntos?',
     texto: 'Me conte o produto, o prazo e onde o vídeo vai rodar. Respondo em até um dia útil.',
+    // Opcional: uma foto sua ao lado dos contatos (arquivo em src/imagens).
+    foto: 'vamos-criar-juntos.png',
+    fotoDescricao: 'Railane olhando para trás por cima do ombro, sorrindo, de blusa listrada',
     whatsapp: {
       // 55 + DDD + número. Pode escrever com espaço ou traço.
       numero: '55 71 99282-6484',

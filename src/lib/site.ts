@@ -182,6 +182,16 @@ if (import.meta.env.PROD) {
       sobras.map(([, texto]) => `Conteúdo de exemplo: "${texto}" continua no site, e a faixa de demonstração está desligada. Troque pelo conteúdo real dela ou apague.`),
     );
 }
+// Com a lista de nichos preenchida, cada vídeo precisa usar um nicho dela (evita "Skincare" e
+// "Skin care" virarem dois atalhos diferentes).
+const nichosDaLista = new Set((c.videos?.nichos ?? []).map(chaveDoNicho));
+const nichosForaDaLista = nichosDaLista.size ? todosOsVideos.filter((v) => v.nicho && !nichosDaLista.has(chaveDoNicho(v.nicho))) : [];
+if (nichosForaDaLista.length)
+  throw new ProblemasNoConteudo(
+    nichosForaDaLista.map(
+      (v) => `Vídeo ${v.numero}: o nicho "${v.nicho}" não está na lista de nichos (videos.nichos). Escreva igual a um nicho da lista ou acrescente este nicho a ela.`,
+    ),
+  );
 conferirPastaPublic();
 if (c.modoDosVideos === 'local') conferirNaPasta();
 else await conferirNoR2();

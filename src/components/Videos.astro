@@ -14,13 +14,15 @@ for (const video of videosDaGrade) {
   if (!grupos.has(chave)) grupos.set(chave, { nome: video.nicho || 'Outros vídeos', chave, videos: [] });
   grupos.get(chave)!.videos.push(video);
 }
-const lista = [...grupos.values()].sort((a, b) => Number(a.chave === 'outros') - Number(b.chave === 'outros'));
+// Com a lista `videos.nichos` preenchida, os nichos seguem a ordem dela; os que não têm vídeo não aparecem.
+const ordem = v.nichos.map(chaveDoNicho);
+const posicao = (chave: string) => (chave === 'outros' ? Infinity : ordem.includes(chave) ? ordem.indexOf(chave) : ordem.length);
+const lista = [...grupos.values()].sort((a, b) => posicao(a.chave) - posicao(b.chave));
 const porNicho = lista.length >= 2;
-const quantos = (n: number) => `${n} ${n === 1 ? 'vídeo' : 'vídeos'}`;
 ---
 
 <section class="secao recuo" id="videos" aria-labelledby="videos-titulo">
-  <Cabecalho rotulo="Portfólio" titulo={v.titulo} id="videos-titulo" />
+  <Cabecalho titulo={v.titulo} id="videos-titulo" />
   {v.texto && <p class="texto">{v.texto}</p>}
   {
     porNicho && (
@@ -28,9 +30,7 @@ const quantos = (n: number) => `${n} ${n === 1 ? 'vídeo' : 'vídeos'}`;
         <ul>
           {lista.map((g) => (
             <li>
-              <a href={`#nicho-${g.chave}`}>
-                {g.nome} <span>{g.videos.length}</span>
-              </a>
+              <a href={`#nicho-${g.chave}`}>{g.nome}</a>
             </li>
           ))}
         </ul>
@@ -41,9 +41,7 @@ const quantos = (n: number) => `${n} ${n === 1 ? 'vídeo' : 'vídeos'}`;
     lista.map((g) => (
       <div class="grupo" id={porNicho ? `nicho-${g.chave}` : undefined}>
         {porNicho && (
-          <h3>
-            {g.nome} <span>{quantos(g.videos.length)}</span>
-          </h3>
+          <h3>{g.nome}</h3>
         )}
         <ul class="grade">
           {g.videos.map((video) => (
@@ -67,32 +65,35 @@ const quantos = (n: number) => `${n} ${n === 1 ? 'vídeo' : 'vídeos'}`;
   .atalhos ul {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.4rem;
   }
+  /* Botões pequenos e iguais: letra miúda em caixa alta, com o mesmo espaço em todos. */
   .atalhos a {
     display: inline-flex;
     align-items: center;
-    gap: 0.35em;
-    min-height: 2.4rem;
-    padding: 0.45em 1em;
+    min-height: 2.25rem;
+    padding: 0.35em 0.95em;
     border: 1px solid var(--linha);
     border-radius: 999px;
-    font-size: 0.9rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     text-decoration: none;
     white-space: nowrap;
-    transition: border-color 0.15s ease;
+    transition:
+      border-color 0.15s ease,
+      background-color 0.15s ease,
+      color 0.15s ease;
   }
   .atalhos a:hover {
-    border-color: var(--texto);
-  }
-  .atalhos span {
-    font-size: 0.8em;
-    color: var(--suave);
-    font-variant-numeric: tabular-nums;
+    border-color: var(--destaque);
+    background: var(--destaque);
+    color: var(--no-destaque);
   }
   .grupo {
-    /* O título do nicho para logo abaixo do cabeçalho fixo. */
-    scroll-margin-top: 5rem;
+    /* O título do nicho para logo abaixo do cabeçalho fixo (que no celular tem duas linhas). */
+    scroll-margin-top: 6.25rem;
   }
   .grupo + .grupo {
     margin-top: clamp(2.5rem, 6vw, 3.5rem);
@@ -107,14 +108,6 @@ const quantos = (n: number) => `${n} ${n === 1 ? 'vídeo' : 'vídeos'}`;
     margin-bottom: 1rem;
     font-size: calc(clamp(1.4rem, 3.5vw, 1.9rem) * var(--escala));
   }
-  h3 span {
-    font-family: var(--f-corpo);
-    font-size: 0.8rem;
-    font-weight: 400;
-    letter-spacing: 0;
-    text-transform: none;
-    color: var(--suave);
-  }
   .grade {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -128,15 +121,28 @@ const quantos = (n: number) => `${n} ${n === 1 ? 'vídeo' : 'vídeos'}`;
     h3 {
       justify-content: center;
     }
-    .atalhos ul {
-      justify-content: center;
+    /* Celular: os nichos numa linha só, que desliza para o lado, de ponta a ponta da tela. */
+    .atalhos {
+      margin-inline: calc(-1 * clamp(1rem, 5vw, 3rem));
     }
-    .atalhos a {
-      min-height: 2.25rem;
-      font-size: 0.85rem;
+    .atalhos ul {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 0.25rem clamp(1rem, 5vw, 3rem);
+      scroll-padding-inline: clamp(1rem, 5vw, 3rem);
+      /* Esmaece a ponta direita para mostrar que tem mais nichos ao arrastar. */
+      mask-image: linear-gradient(to right, #000 82%, transparent);
+    }
+    .atalhos ul::-webkit-scrollbar {
+      display: none;
+    }
+    .atalhos li {
+      flex: none;
     }
   }
-  @media (min-width: 760px) {
+  /* A partir daqui o cabeçalho tem uma linha só (3,75rem), e os atalhos ficam presos logo abaixo. */
+  @media (min-width: 900px) {
     .atalhos {
       position: sticky;
       top: 3.75rem;

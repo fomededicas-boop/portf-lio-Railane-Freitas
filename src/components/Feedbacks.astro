@@ -1,0 +1,160 @@
+---
+// Feedbacks: prints de avaliações num mural, separados em "De marcas" e "De seguidores".
+// Os prints entram um a um quando aparecem na tela.
+import { Image } from 'astro:assets';
+import Cabecalho from './Cabecalho.astro';
+import { c } from '../lib/site';
+
+const f = c.feedbacks!;
+const grupos = [
+  { titulo: 'De marcas', itens: f.lista.filter((i) => i.de === 'marca') },
+  { titulo: 'De seguidores', itens: f.lista.filter((i) => i.de === 'seguidor') },
+].filter((g) => g.itens.length > 0);
+const separar = grupos.length > 1;
+---
+
+<section class="secao recuo" id="feedbacks" aria-labelledby="feedbacks-titulo">
+  <Cabecalho titulo={f.titulo} id="feedbacks-titulo" />
+  {
+    grupos.map((g) => (
+      <div class="grupo">
+        {separar && <h3>{g.titulo}</h3>}
+        <ul class="mural">
+          {g.itens.map((item, i) => (
+            <li class="print anima" style={`--i:${i}`}>
+              <figure>
+                <Image src={item.imagem} alt={`Print do feedback ${item.de === 'marca' ? 'da marca' : 'de'} ${item.legenda}`} width={520} densities={[1, 2]} />
+                <figcaption>
+                  <span aria-hidden="true">✦</span> {item.legenda}
+                </figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+</section>
+
+<script>
+  // Mesmo efeito do "Sobre": cada print sobe e aparece. Sem JavaScript, tudo já aparece parado.
+  const secao = document.querySelector<HTMLElement>('#feedbacks');
+  if (secao && 'IntersectionObserver' in window) {
+    secao.classList.add('animar');
+    const observador = new IntersectionObserver(
+      (entradas) => {
+        for (const e of entradas)
+          if (e.isIntersecting) {
+            e.target.classList.add('visivel');
+            observador.unobserve(e.target);
+          }
+      },
+      { threshold: 0.15 },
+    );
+    secao.querySelectorAll('.anima').forEach((el) => observador.observe(el));
+  }
+</script>
+
+<style>
+  .grupo + .grupo {
+    margin-top: clamp(2.5rem, 6vw, 3.5rem);
+  }
+  h3 {
+    margin-bottom: 1.1rem;
+    font-size: calc(clamp(1.3rem, 3.2vw, 1.7rem) * var(--escala));
+  }
+  /* Mural em colunas: cada print ocupa a altura que precisa, sem buracos. */
+  .mural {
+    columns: 2;
+    column-gap: 0.85rem;
+  }
+  .print {
+    break-inside: avoid;
+    margin-bottom: 0.85rem;
+  }
+  figure {
+    overflow: hidden;
+    border: 1px solid var(--linha);
+    border-radius: max(var(--raio), 12px);
+    background: #fff;
+    box-shadow: 0 6px 16px rgb(60 40 30 / 0.08);
+    rotate: -0.8deg;
+    transition:
+      rotate 0.25s ease,
+      translate 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+  .print:nth-child(even) figure {
+    rotate: 0.8deg;
+  }
+  .print:hover figure {
+    rotate: 0deg;
+    translate: 0 -4px;
+    box-shadow: 0 12px 26px rgb(60 40 30 / 0.14);
+  }
+  figure :global(img) {
+    width: 100%;
+    height: auto;
+  }
+  figcaption {
+    padding: 0.55rem 0.8rem 0.65rem;
+    border-top: 1px solid var(--linha);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  figcaption span {
+    color: var(--destaque);
+  }
+
+  /* Entrada: um print depois do outro (o atraso vem de --i). */
+  .animar .anima {
+    opacity: 0;
+    translate: 0 18px;
+    transition:
+      opacity 0.5s ease,
+      translate 0.5s ease;
+    transition-delay: calc(var(--i) * 60ms);
+  }
+  .animar .anima.visivel {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  /* Celular: carrossel que desliza para o lado, um print grande por vez (e um pedaço do
+     próximo aparecendo, para mostrar que tem mais). */
+  @media (max-width: 759px) {
+    h3 {
+      text-align: center;
+    }
+    .mural {
+      display: flex;
+      gap: 0.85rem;
+      columns: auto;
+      margin-inline: calc(-1 * clamp(1rem, 5vw, 3rem));
+      padding: 0.5rem clamp(1rem, 5vw, 3rem) 1rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: clamp(1rem, 5vw, 3rem);
+      scrollbar-width: none;
+    }
+    .mural::-webkit-scrollbar {
+      display: none;
+    }
+    .print {
+      flex: 0 0 84%;
+      margin-bottom: 0;
+      scroll-snap-align: start;
+    }
+  }
+  @media (min-width: 760px) {
+    .mural {
+      columns: 3;
+      column-gap: 1.1rem;
+    }
+    .print {
+      margin-bottom: 1.1rem;
+    }
+  }
+</style>

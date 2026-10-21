@@ -3,7 +3,8 @@
 import { defineConfig, fontProviders } from 'astro/config';
 import { FONTES, variavelDaFonte } from './src/lib/temas.ts';
 
-const pacote = (nome) => nome.toLowerCase().replaceAll(' ', '-');
+// `estatica`: nome do pacote, quando é diferente do nome da fonte (ex.: "Bodoni Moda Bold" → bodoni-moda).
+const pacote = (fonte) => fonte.estatica ?? fonte.nome.toLowerCase().replaceAll(' ', '-');
 
 export default defineConfig({
   // Site de uma página só: o CSS vai dentro do HTML e a página não espera outro arquivo para aparecer.
@@ -22,7 +23,12 @@ export default defineConfig({
         (fonte.italico ? ['normal', 'italic'] : ['normal']).map((estilo) => ({
           weight: peso,
           style: estilo,
-          src: [`./node_modules/@fontsource/${pacote(fonte.nome)}/files/${pacote(fonte.nome)}-latin-${peso}-${estilo}.woff2`],
+          // Fonte variável (campo `arquivo`): o mesmo arquivo serve para qualquer peso.
+          src: [
+            fonte.arquivo
+              ? `${fonte.arquivo}-${estilo}.woff2`
+              : `./node_modules/@fontsource/${pacote(fonte)}/files/${pacote(fonte)}-latin-${peso}-${estilo}.woff2`,
+          ],
         })),
       ),
     },

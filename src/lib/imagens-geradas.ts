@@ -14,18 +14,20 @@ const h = (type: string, style: Record<string, unknown>, ...children: (No | stri
   props: { style, children },
 });
 
-const pacote = (nome: string) => nome.toLowerCase().replaceAll(' ', '-');
-const arquivoDaFonte = (nome: string, peso: number, estilo: 'normal' | 'italic') =>
-  readFile(join(process.cwd(), 'node_modules/@fontsource', pacote(nome), 'files', `${pacote(nome)}-latin-${peso}-${estilo}.woff`));
+// As imagens usam o .woff estático do pacote @fontsource (o gerador não lê .woff2 nem fonte
+// variável); fonte com `estatica` usa o pacote dela (ex.: Fraunces Soft → Fraunces).
+const pacote = (fonte: { nome: string; estatica?: string }) => fonte.estatica ?? fonte.nome.toLowerCase().replaceAll(' ', '-');
+const arquivoDaFonte = (fonte: { nome: string; estatica?: string }, peso: number, estilo: 'normal' | 'italic') =>
+  readFile(join(process.cwd(), 'node_modules/@fontsource', pacote(fonte), 'files', `${pacote(fonte)}-latin-${peso}-${estilo}.woff`));
 
 async function carregarFontes() {
   const { titulo, corpo } = fontes;
   const lista = [
-    { name: 'Titulo', data: await arquivoDaFonte(titulo.nome, titulo.pesos[0], 'normal'), weight: 400, style: 'normal' },
-    { name: 'Corpo', data: await arquivoDaFonte(corpo.nome, 400, 'normal'), weight: 400, style: 'normal' },
-    { name: 'Corpo', data: await arquivoDaFonte(corpo.nome, 600, 'normal'), weight: 600, style: 'normal' },
+    { name: 'Titulo', data: await arquivoDaFonte(titulo, titulo.pesos[0], 'normal'), weight: 400, style: 'normal' },
+    { name: 'Corpo', data: await arquivoDaFonte(corpo, 400, 'normal'), weight: 400, style: 'normal' },
+    { name: 'Corpo', data: await arquivoDaFonte(corpo, 600, 'normal'), weight: 600, style: 'normal' },
   ];
-  if (titulo.italico) lista.push({ name: 'Titulo', data: await arquivoDaFonte(titulo.nome, titulo.pesos[0], 'italic'), weight: 400, style: 'italic' });
+  if (titulo.italico) lista.push({ name: 'Titulo', data: await arquivoDaFonte(titulo, titulo.pesos[0], 'italic'), weight: 400, style: 'italic' });
   return lista as Parameters<typeof satori>[1]['fonts'];
 }
 

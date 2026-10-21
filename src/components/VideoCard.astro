@@ -83,6 +83,15 @@ const previa = !!c.videos?.previaAutomatica;
 
   for (const v of videos) {
     observador.observe(v);
+    // Um vídeo com som de cada vez: se este começar (pelo botão ou pelos controles), os outros param.
+    v.addEventListener('play', () => {
+      if (v.muted) return;
+      for (const outro of videos)
+        if (outro !== v && !outro.muted && !outro.paused) {
+          outro.pause();
+          voltarParaPrevia(outro);
+        }
+    });
     v.addEventListener('ended', () => {
       voltarParaPrevia(v);
       previa(v);

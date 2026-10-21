@@ -6,6 +6,8 @@ import Campanha from './Campanha.astro';
 import Videos from './Videos.astro';
 import Diferenciais from './Diferenciais.astro';
 import Marcas from './Marcas.astro';
+import Sobre from './Sobre.astro';
+import Feedbacks from './Feedbacks.astro';
 import Resultados from './Resultados.astro';
 import ComoTrabalho from './ComoTrabalho.astro';
 import Valores from './Valores.astro';
@@ -23,11 +25,13 @@ const tem = (secao: { mostrar: boolean } | undefined, ...listas: unknown[][]) =>
   !!secao?.mostrar && listas.some((lista) => lista.length > 0);
 const t = c.comoTrabalho;
 
-// `link`: aparece no menu do cabeçalho fixo.
+// `link`: aparece no menu do cabeçalho fixo (só as seções que estão no site).
 const secoes = [
-  { Componente: Videos, id: 'videos', link: 'Vídeos', mostrar: tem(c.videos, videosDaGrade) },
+  { Componente: Marcas, id: 'marcas', link: 'Marcas', mostrar: tem(c.marcas, c.marcas?.lista ?? []) },
+  { Componente: Sobre, id: 'sobre', link: 'Sobre', mostrar: tem(c.sobre, c.sobre?.fatos ?? [], c.sobre?.softSkills ?? [], c.sobre?.hardSkills ?? []) },
   { Componente: Diferenciais, id: 'diferenciais', mostrar: tem(c.diferenciais, c.diferenciais?.lista ?? []) },
-  { Componente: Marcas, id: 'marcas', mostrar: tem(c.marcas, c.marcas?.lista ?? []) },
+  { Componente: Videos, id: 'videos', link: 'Nichos', mostrar: tem(c.videos, videosDaGrade) },
+  { Componente: Feedbacks, id: 'feedbacks', link: 'Feedbacks', mostrar: tem(c.feedbacks, c.feedbacks?.lista ?? []) },
   {
     Componente: Resultados,
     id: 'resultados',
@@ -143,12 +147,36 @@ const secoes = [
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  nav {
-    display: none;
-  }
   nav ul {
     display: flex;
     gap: 1.75rem;
+  }
+  /* Celular: o menu vai para uma segunda linha, embaixo do nome e do botão, e desliza para o
+     lado se não couber. */
+  @media (max-width: 899px) {
+    .conteudo-barra {
+      flex-wrap: wrap;
+      row-gap: 0;
+    }
+    nav {
+      order: 3;
+      margin-inline: calc(-1 * clamp(1rem, 5vw, 3rem));
+      width: calc(100% + 2 * clamp(1rem, 5vw, 3rem));
+    }
+    nav ul {
+      justify-content: space-between;
+      gap: 0.5rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 0.15rem clamp(1rem, 5vw, 3rem) 0.7rem;
+    }
+    .barra nav a {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
   }
   nav a {
     font-size: 0.9rem;
@@ -179,11 +207,6 @@ const secoes = [
       flex-direction: column;
       align-items: center;
       text-align: center;
-    }
-  }
-  @media (min-width: 900px) {
-    nav {
-      display: block;
     }
   }
 </style>

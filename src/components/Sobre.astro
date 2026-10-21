@@ -1,0 +1,486 @@
+---
+// "Sobre mim" em colagem: a chamada e as fotos no meio, frases soltas com setas em volta e duas
+// folhas presas com clipe (soft e hard skills). Os itens entram um a um quando aparecem na tela.
+import { Image } from 'astro:assets';
+import { c } from '../lib/site';
+
+const s = c.sobre!;
+const temPalco = !!s.foto || s.laterais.length > 0;
+// Frases sem foto (até 3) ficam em volta das fotos do meio; as outras, dos lados.
+const noPalco = temPalco ? s.fatos.filter((f) => f.fotos.length === 0).slice(0, 3) : [];
+const dosLados = s.fatos.filter((f) => !noPalco.includes(f));
+// No computador, metade das frases fica à esquerda e metade à direita das fotos.
+const metade = Math.ceil(dosLados.length / 2);
+const colunas = [dosLados.slice(0, metade), dosLados.slice(metade)];
+const folhas = [
+  { titulo: 'Soft skills', itens: s.softSkills },
+  { titulo: 'Hard skills', itens: s.hardSkills },
+].filter((f) => f.itens.length > 0);
+---
+
+<section class="secao recuo" id="sobre" aria-labelledby="sobre-titulo">
+  <div class="quadro">
+    <p class="kicker rotulo">{s.titulo}</p>
+    <div class="centro anima" style="--i:0">
+      {s.apelido && <p class="apelido">{s.apelido}</p>}
+      <h2 id="sobre-titulo">
+        <svg class="coroa" viewBox="0 0 48 28" aria-hidden="true">
+          <path d="M4 24 2 6l12 9 10-13 10 13 12-9-2 18Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" />
+        </svg>
+        {s.chamada ?? s.titulo}
+      </h2>
+      {
+        temPalco && (
+          <div class:list={['palco', { 'so-laterais': !s.foto, 'com-baixo': noPalco.length === 3 }]}>
+            {s.foto && <Image class="foto-meio" src={s.foto} alt={s.fotoDescricao ?? ''} width={360} densities={[1, 2]} />}
+            {s.laterais.map((l, i) => (
+              <Image class:list={['lateral', i === 0 ? 'lateral-esq' : 'lateral-dir']} src={l.foto} alt={l.descricao} width={320} densities={[1, 2]} />
+            ))}
+            {noPalco.map((f, i) => (
+              <p class={`solta solta-${i + 1}`}>
+                {f.destaque && <strong>{f.destaque}</strong>} {f.texto}
+                <svg class="seta-solta" viewBox="0 0 64 32" aria-hidden="true">
+                  <path d="M3 24C16 6 38 4 56 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                  <path d="M49 8.5 57 14.5 48.5 19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </p>
+            ))}
+          </div>
+        )
+      }
+    </div>
+    {
+      colunas.map((lista, coluna) => (
+        <ul class:list={['fatos', coluna === 0 ? 'esquerda' : 'direita']}>
+          {lista.map((f, i) => (
+            <li
+              class:list={['nota', 'anima', { ultima: coluna === 1 && i === lista.length - 1 && dosLados.length % 2 === 1 }]}
+              style={`--i:${coluna * metade + i + 1}`}
+            >
+              {f.fotos.length > 0 && (
+                <div class="circulos" aria-hidden="true">
+                  {f.fotos.map((foto) => (
+                    <Image
+                      class:list={['circulo', { recorte: foto.src.includes('sem-fundo') }]}
+                      src={foto}
+                      alt=""
+                      width={180}
+                      densities={[1, 2]}
+                    />
+                  ))}
+                </div>
+              )}
+              <p>
+                {f.destaque && <strong>{f.destaque}</strong>} {f.texto}
+              </p>
+              <svg class="seta" viewBox="0 0 64 32" aria-hidden="true">
+                <path d="M3 24C16 6 38 4 56 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                <path d="M49 8.5 57 14.5 48.5 19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </li>
+          ))}
+        </ul>
+      ))
+    }
+    {
+      folhas.length > 0 && (
+        <div class="folhas">
+          {folhas.map((f, i) => (
+            <div class="folha anima" style={`--i:${s.fatos.length + i + 1}`}>
+              <svg class="clipe" viewBox="0 0 24 56" aria-hidden="true">
+                <path
+                  d="M16 14v28a6 6 0 0 1-12 0V10a8 8 0 0 1 16 0v30a4 4 0 0 1-8 0V16"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <h3>{f.titulo}</h3>
+              <ul>
+                {f.itens.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<script>
+  // Os itens entram um a um quando o quadro aparece. Sem JavaScript, tudo já aparece parado.
+  const quadro = document.querySelector<HTMLElement>('#sobre .quadro');
+  if (quadro && 'IntersectionObserver' in window) {
+    quadro.classList.add('animar');
+    const observador = new IntersectionObserver(
+      (entradas) => {
+        for (const e of entradas)
+          if (e.isIntersecting) {
+            e.target.classList.add('visivel');
+            observador.unobserve(e.target);
+          }
+      },
+      { threshold: 0.25 },
+    );
+    quadro.querySelectorAll('.anima').forEach((el) => observador.observe(el));
+  }
+</script>
+
+<style>
+  /* Quadro em papel quadriculado, como um caderno de colagem. */
+  .quadro {
+    position: relative;
+    display: grid;
+    gap: 1.25rem;
+    padding: clamp(1.5rem, 5vw, 3.5rem) clamp(1rem, 4vw, 3rem);
+    border-radius: max(var(--raio), 16px);
+    background:
+      linear-gradient(rgb(0 0 0 / 0.045) 1px, transparent 1px) 0 0 / 22px 22px,
+      linear-gradient(90deg, rgb(0 0 0 / 0.045) 1px, transparent 1px) 0 0 / 22px 22px,
+      #ece4da;
+    color: #1f1a17;
+  }
+  .rotulo {
+    justify-self: center;
+    color: #5c5048;
+  }
+
+  /* Chamada do meio, com o apelido escrito torto em cima e uma coroinha. */
+  .centro {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+  }
+  /* Palco: a foto rosa no meio e os dois recortes saindo pelos lados, de baixo para cima. */
+  .palco {
+    position: relative;
+    width: min(100%, 26rem);
+    aspect-ratio: 1 / 0.86;
+    margin-top: 1rem;
+  }
+  .palco :global(img) {
+    position: absolute;
+    height: auto;
+  }
+  .palco :global(.foto-meio) {
+    top: 0;
+    left: 50%;
+    width: 54%;
+    translate: -50% 0;
+    box-shadow: 0 10px 24px rgb(60 40 30 / 0.15);
+  }
+  .palco :global(.lateral) {
+    bottom: 0;
+    filter: drop-shadow(0 8px 12px rgb(60 40 30 / 0.22));
+  }
+  .palco :global(.lateral-esq) {
+    left: -2%;
+    width: 42%;
+  }
+  .palco :global(.lateral-dir) {
+    right: -4%;
+    width: 50%;
+  }
+  .palco.so-laterais {
+    aspect-ratio: 1 / 0.6;
+  }
+  /* Frases soltas em volta das fotos: nos cantos de cima (ao lado da foto rosa) e embaixo. */
+  .palco.com-baixo {
+    margin-bottom: 4.25rem;
+  }
+  .solta {
+    position: absolute;
+    z-index: 1;
+    width: 25%;
+    font-family: var(--f-titulo);
+    font-size: clamp(0.78rem, 2.6vw, 0.98rem);
+    line-height: 1.2;
+  }
+  .solta strong {
+    display: block;
+    font-size: 1.12em;
+  }
+  .seta-solta {
+    display: block;
+    width: 2.1rem;
+    margin-top: 0.2rem;
+    color: #5c5048;
+  }
+  .solta-1 {
+    top: 6%;
+    left: -3%;
+    text-align: left;
+    rotate: -3deg;
+  }
+  .solta-1 .seta-solta {
+    margin-left: auto;
+    rotate: 25deg;
+  }
+  .solta-2 {
+    top: 6%;
+    right: -3%;
+    text-align: right;
+    rotate: 3deg;
+  }
+  .solta-2 .seta-solta {
+    scale: -1 1;
+    rotate: -25deg;
+  }
+  .solta-3 {
+    top: 100%;
+    left: 50%;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    translate: -50% 0;
+    text-align: center;
+  }
+  /* Na frase de baixo, a seta vem antes do texto e aponta para cima, para as fotos. */
+  .solta-3 .seta-solta {
+    order: -1;
+    margin: 0 0 0.1rem;
+    rotate: -80deg;
+  }
+  .apelido {
+    margin-bottom: 0.35rem;
+    font-family: var(--f-titulo);
+    font-style: italic;
+    font-size: 1.15rem;
+    color: #a9553a;
+    transform: rotate(-4deg);
+  }
+  h2 {
+    position: relative;
+    font-size: calc(clamp(2.2rem, 7vw, 3.6rem) * var(--escala));
+    line-height: 1;
+  }
+  /* Coroinha torta no canto de cima da chamada. */
+  .coroa {
+    position: absolute;
+    top: -0.5em;
+    right: -0.45em;
+    width: 0.6em;
+    color: #be5428;
+    transform: rotate(18deg);
+  }
+
+  /* Frases soltas em volta das fotos, como anotações à mão, cada uma com uma seta curva
+     apontando para o meio. Algumas têm foto em círculo. */
+  .fatos {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.6rem 1rem;
+    align-items: center;
+  }
+  .nota {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 0.45rem;
+    text-align: center;
+    font-family: var(--f-titulo);
+    font-size: 1.02rem;
+    line-height: 1.25;
+    rotate: -1.5deg;
+    transition: translate 0.25s ease;
+  }
+  .nota:nth-child(even) {
+    rotate: 1.5deg;
+  }
+  .nota:hover {
+    translate: 0 -3px;
+  }
+  .nota strong {
+    display: block;
+    font-size: 1.12rem;
+  }
+  .seta {
+    width: 2.6rem;
+    color: #5c5048;
+  }
+  /* Celular: as frases dos dois lados viram uma grade só de 2 colunas; se sobrar uma, ela
+     fica centralizada sozinha na última linha. */
+  @media (max-width: 899px) {
+    .quadro {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 1rem;
+      row-gap: 1.6rem;
+    }
+    .rotulo,
+    .centro,
+    .folhas {
+      grid-column: 1 / -1;
+    }
+    .fatos {
+      display: contents;
+    }
+    .nota.ultima {
+      grid-column: 1 / -1;
+    }
+  }
+  /* No celular as frases ficam embaixo das fotos, então a seta só aparece no computador. */
+  .seta {
+    display: none;
+  }
+  /* Fotos em círculo. Recorte sem fundo: a pessoa inteira dentro de um círculo colorido.
+     Foto com fundo: preenche o círculo, com um contorno colorido. */
+  .circulos {
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+  .nota :global(.circulo) {
+    flex: none;
+    width: 5.25rem;
+    height: 5.25rem;
+    border: 3px solid #6f7f6a;
+    border-radius: 50%;
+    background: #fff;
+    object-fit: cover;
+    object-position: center 15%;
+  }
+  .nota :global(.circulo.recorte) {
+    padding-top: 0.4rem;
+    border: 0;
+    background: #6f7f6a;
+    object-fit: contain;
+    object-position: center bottom;
+  }
+  /* Duas fotos lado a lado: círculos um pouco menores, encostados. */
+  .circulos:has(:global(.circulo:nth-child(2))) :global(.circulo) {
+    width: 4.25rem;
+    height: 4.25rem;
+  }
+  .nota:nth-child(even) :global(.circulo),
+  .circulos :global(.circulo:nth-child(2)) {
+    border-color: #be5428;
+  }
+  .nota:nth-child(even) :global(.circulo.recorte),
+  .circulos :global(.circulo.recorte:nth-child(2)) {
+    background: #be5428;
+  }
+
+  /* Folhas com clipe e a borda de baixo rasgada. */
+  .folhas {
+    display: grid;
+    gap: 1.75rem;
+    margin-top: 0.75rem;
+  }
+  .folha {
+    position: relative;
+    padding: 1.6rem 1.4rem 2rem;
+    background: #f7f1e8;
+    box-shadow: 0 8px 20px rgb(60 40 30 / 0.14);
+    clip-path: polygon(0 0, 100% 0, 100% 94%, 92% 100%, 84% 95%, 75% 100%, 66% 94%, 57% 100%, 48% 95%, 39% 100%, 30% 94%, 21% 100%, 12% 95%, 4% 100%, 0 94%);
+    rotate: -1.5deg;
+  }
+  .folha + .folha {
+    background: #efe6db;
+    rotate: 1.5deg;
+  }
+  .clipe {
+    position: absolute;
+    top: -0.4rem;
+    right: 1.4rem;
+    width: 1rem;
+    color: #7a6f68;
+  }
+  .folha h3 {
+    margin-bottom: 0.85rem;
+    font-size: calc(1.6rem * var(--escala));
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .folha li {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.15rem 0;
+  }
+  .folha li::before {
+    content: '✦';
+    color: #be5428;
+  }
+
+  /* Entrada: cada item sobe e aparece, um depois do outro (o atraso vem de --i). */
+  .animar .anima {
+    opacity: 0;
+    translate: 0 18px;
+    transition:
+      opacity 0.5s ease,
+      translate 0.5s ease,
+      rotate 0.25s ease;
+    transition-delay: calc(var(--i) * 70ms), calc(var(--i) * 70ms), 0s;
+  }
+  .animar .anima.visivel {
+    opacity: 1;
+    translate: 0 0;
+  }
+  .animar .nota.visivel:hover {
+    translate: 0 -4px;
+    transition-delay: 0s;
+  }
+
+  /* Computador: frases dos dois lados das fotos, com a seta apontando para o meio, e as
+     folhas lado a lado embaixo. */
+  @media (min-width: 900px) {
+    .quadro {
+      grid-template-columns: 1fr minmax(18rem, 1.2fr) 1fr;
+      grid-template-areas:
+        'rotulo rotulo rotulo'
+        'esquerda centro direita'
+        'folhas folhas folhas';
+      column-gap: clamp(1.5rem, 4vw, 3rem);
+      align-items: center;
+    }
+    .rotulo {
+      grid-area: rotulo;
+    }
+    .centro {
+      grid-area: centro;
+    }
+    .esquerda {
+      grid-area: esquerda;
+    }
+    .direita {
+      grid-area: direita;
+    }
+    .fatos {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .fatos .nota {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    /* Esquerda: foto, frase e seta apontando para a direita. */
+    .esquerda .nota {
+      justify-content: flex-end;
+      text-align: right;
+    }
+    /* Direita: seta apontando para a esquerda, frase e foto (ordem invertida). */
+    .direita .nota {
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      text-align: left;
+    }
+    .seta {
+      display: block;
+      flex: none;
+    }
+    .direita .seta {
+      scale: -1 1;
+    }
+    .folhas {
+      grid-area: folhas;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      width: min(100%, 52rem);
+      justify-self: center;
+      gap: 2.5rem;
+    }
+  }
+</style>

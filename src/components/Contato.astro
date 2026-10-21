@@ -1,8 +1,9 @@
 ---
-// Contato: frase de fechamento e a lista de canais.
+// Contato: frase de fechamento, a lista de canais e, se houver, uma foto em arco ao lado.
+import { Image } from 'astro:assets';
 import { c, linkDeContato, telefoneLegivel } from '../lib/site';
 
-const { titulo, texto, whatsapp, email, instagram, tiktok, midiaKit } = c.contato;
+const { titulo, texto, foto, fotoDescricao, whatsapp, email, instagram, tiktok, midiaKit } = c.contato;
 const canais = [
   whatsapp && { rede: 'WhatsApp', valor: telefoneLegivel(whatsapp.numero), href: linkDeContato('whatsapp'), fora: true },
   email && { rede: 'E-mail', valor: email, href: linkDeContato('email'), fora: false },
@@ -12,23 +13,32 @@ const canais = [
 ].filter((canal) => !!canal);
 ---
 
-<section class="secao recuo contato" id="contato" aria-labelledby="contato-titulo">
-  <p class="kicker">Contato</p>
-  <h2 id="contato-titulo">{titulo}</h2>
-  {texto && <p class="texto">{texto}</p>}
-  <ul class="canais">
-    {
-      canais.map((canal) => (
-        <li>
-          <a href={canal.href} {...(canal.fora ? { target: '_blank', rel: 'noopener' } : {})}>
-            <span class="rede">{canal.rede}</span>
-            <span class="valor">{canal.valor}</span>
-            <span class="seta" aria-hidden="true">↗</span>
-          </a>
-        </li>
-      ))
-    }
-  </ul>
+<section class:list={['secao', 'recuo', 'contato', { 'com-foto': foto }]} id="contato" aria-labelledby="contato-titulo">
+  {
+    foto && (
+      <figure class="foto">
+        <Image src={foto} alt={fotoDescricao ?? ''} width={440} densities={[1, 2]} />
+      </figure>
+    )
+  }
+  <div class="conteudo">
+    <p class="kicker">Contato</p>
+    <h2 id="contato-titulo">{titulo}</h2>
+    {texto && <p class="texto">{texto}</p>}
+    <ul class="canais">
+      {
+        canais.map((canal) => (
+          <li>
+            <a href={canal.href} {...(canal.fora ? { target: '_blank', rel: 'noopener' } : {})}>
+              <span class="rede">{canal.rede}</span>
+              <span class="valor">{canal.valor}</span>
+              <span class="seta" aria-hidden="true">↗</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
 </section>
 
 <style>
@@ -54,6 +64,43 @@ const canais = [
       text-align: center;
     }
   }
+
+  /* Foto em arco branco (combina com fotos de fundo branco), com a mesma moldura da capa:
+     uma forma verde deslocada atrás e um contorno solto na frente. */
+  .foto {
+    position: relative;
+    isolation: isolate;
+    width: min(70%, 17rem);
+    margin: 0 auto 2.25rem;
+  }
+  .foto :global(img) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center top;
+    border-radius: 999px 999px 24px 24px;
+    background: #fff;
+  }
+  .foto::before,
+  .foto::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: 999px 999px 24px 24px;
+  }
+  .foto::before {
+    background: #6f7f6a;
+    transform: translate(14px, 14px);
+  }
+  .foto::after {
+    z-index: 1;
+    border: 2px solid var(--destaque);
+    transform: translate(-10px, -10px);
+    pointer-events: none;
+  }
+
   .canais {
     margin-top: clamp(2rem, 5vw, 3rem);
   }
@@ -101,6 +148,25 @@ const canais = [
     }
     .rede {
       grid-column: auto;
+    }
+  }
+  /* Computador: foto à direita e contatos à esquerda. */
+  @media (min-width: 960px) {
+    .com-foto {
+      display: grid;
+      grid-template-columns: 1fr minmax(16rem, 22rem);
+      align-items: center;
+      column-gap: clamp(3rem, 6vw, 5rem);
+    }
+    .com-foto .foto {
+      grid-column: 2;
+      grid-row: 1;
+      width: 100%;
+      margin: 0;
+    }
+    .com-foto .conteudo {
+      grid-column: 1;
+      grid-row: 1;
     }
   }
 </style>

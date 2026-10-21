@@ -1,7 +1,7 @@
 ---
-// Cabeçalho das seções: um rótulo pequeno em cima e o título.
+// Cabeçalho das seções: um rótulo pequeno em cima (opcional) e o título.
 interface Props {
-  rotulo: string;
+  rotulo?: string;
   titulo: string;
   id: string;
 }
@@ -9,7 +9,7 @@ const { rotulo, titulo, id } = Astro.props;
 ---
 
 <header class="cabecalho">
-  <p class="kicker">{rotulo}</p>
+  {rotulo && <p class="kicker">{rotulo}</p>}
   <h2 id={id}>{titulo}</h2>
 </header>
 

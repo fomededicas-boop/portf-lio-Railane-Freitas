@@ -118,6 +118,7 @@ export const esquema = z
       nome: texto('faltou o seu nome'),
       foto: imagem('da foto'),
       fotoDescricao: texto('faltou descrever a foto em poucas palavras (é lida em voz alta para pessoas cegas)'),
+      fotoRecortada: imagem('da foto recortada (sem fundo)').optional(),
       nicho: texto('faltou o nicho em uma linha (ex.: "Skincare, casa e rotina")'),
       funcao: z.string(erro('', 'a função precisa ser um texto entre aspas')).trim().min(1).default('Creator UGC'),
       bio: texto('faltou a bio curta'),
@@ -132,6 +133,7 @@ export const esquema = z
     videos: secao('Vídeos', {
       texto: opcional,
       previaAutomatica: sim(true),
+      nichos: z.array(texto('faltou o nome do nicho'), erro('', 'a lista de nichos precisa estar entre colchetes [ ]')).default([]),
       lista: z.array(video, erro('', 'a lista de vídeos precisa estar entre colchetes [ ]')).default([]),
     }),
 
@@ -157,6 +159,40 @@ export const esquema = z
 
     marcas: secao('Marcas com quem já trabalhei', {
       lista: z.array(z.strictObject({ nome: texto('faltou o nome da {item}'), logo: imagem('do logo').optional() })).default([]),
+    }),
+
+    sobre: secao('Sobre mim', {
+      chamada: opcional,
+      apelido: opcional,
+      foto: imagem('da foto do sobre').optional(),
+      fotoDescricao: opcional,
+      laterais: z
+        .array(z.strictObject({ foto: imagem('da foto lateral'), descricao: texto('faltou descrever a foto lateral (é lida em voz alta para pessoas cegas)') }))
+        .max(2, { error: 'coloque no máximo 2 fotos laterais' })
+        .default([]),
+      fatos: z
+        .array(
+          z.strictObject({
+            destaque: opcional,
+            texto: texto('faltou o texto do {item}'),
+            fotos: z.array(imagem('da foto do {item}')).max(2, { error: 'coloque no máximo 2 fotos por {item}' }).default([]),
+          }),
+        )
+        .default([]),
+      softSkills: z.array(texto('a {item} está vazia')).default([]),
+      hardSkills: z.array(texto('a {item} está vazia')).default([]),
+    }),
+
+    feedbacks: secao('Feedbacks', {
+      lista: z
+        .array(
+          z.strictObject({
+            imagem: imagem('do print do {item}'),
+            legenda: texto('faltou de quem é o {item} (ex.: o nome da marca)'),
+            de: z.enum(['marca', 'seguidor'], { error: 'o campo "de" do {item} pode ser "marca" ou "seguidor"' }).default('marca'),
+          }),
+        )
+        .default([]),
     }),
 
     resultados: secao('Resultados', {
@@ -197,6 +233,8 @@ export const esquema = z
     contato: z.strictObject({
       titulo: z.string().trim().default('Vamos criar juntos?'),
       texto: opcional,
+      foto: imagem('da foto do contato').optional(),
+      fotoDescricao: opcional,
       whatsapp: whatsapp.optional(),
       email: z
         .union([z.literal(''), z.email({ error: 'o e-mail parece errado (ex.: "nome@gmail.com")' })], erro('', 'o e-mail parece errado'))
@@ -234,11 +272,12 @@ export type Conteudo = z.output<typeof esquema>;
 const SECOES: Record<string, string> = {
   modoExemplo: 'Modo exemplo', endereco: 'Endereço do site', modoDosVideos: 'Modo dos vídeos', urlDosVideos: 'URL dos vídeos',
   tema: 'Tema', cores: 'Cores',
-  topo: 'Topo', videos: 'Vídeos', campanha: 'Campanha', diferenciais: 'Diferenciais', marcas: 'Marcas',
+  topo: 'Topo', videos: 'Vídeos', campanha: 'Campanha', diferenciais: 'Diferenciais', marcas: 'Marcas', sobre: 'Sobre', feedbacks: 'Feedbacks',
   resultados: 'Resultados', comoTrabalho: 'Como trabalho', valores: 'Valores', contato: 'Contato', seo: 'SEO',
 };
 const ITENS: Record<string, string> = {
   'videos.lista': 'vídeo', 'diferenciais.lista': 'diferencial', 'marcas.lista': 'marca',
+  'sobre.fatos': 'fato', 'sobre.softSkills': 'soft skill', 'sobre.hardSkills': 'hard skill', 'feedbacks.lista': 'feedback',
   'resultados.numeros': 'número', 'resultados.prints': 'print', 'resultados.depoimentos': 'depoimento',
   'comoTrabalho.incluso': 'item do "incluso"', 'valores.pacotes': 'pacote', 'valores.avulsos': 'item avulso',
 };
