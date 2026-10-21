@@ -1,0 +1,11 @@
+// Configuração para publicar como Worker na Cloudflare (Workers & Pages > Create application > Import a repository).
+// "name" precisa ser igual ao nome do projeto no painel, senão a publicação falha.
+{
+  "name": "portfolio-ugc",
+  "compatibility_date": "2026-10-01",
+  // Só os vídeos passam pelo worker.js (para tocarem no iPhone); o resto do site vai direto.
+  "main": "worker.js",
+  "assets": { "directory": "./dist", "binding": "ASSETS", "run_worker_first": ["/videos/*"] },
+  // Liga o endereço público nome-do-projeto.SUBDOMINIO.workers.dev.
+  "workers_dev": true
+}
