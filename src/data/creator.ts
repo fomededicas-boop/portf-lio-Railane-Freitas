@@ -48,7 +48,8 @@ export default defineCreator({
   //   'rosa'      → tons de rosa com ameixa
   //   'terra'     → linho, marrom e verde-oliva, ar natural
   //   'alviverde' → verde e branco de time de futebol, topo verde com fio dourado
-  tema: 'alviverde',
+  //   'railane'   → sua identidade visual: topo laranja, fundo creme, fio verde e rosa
+  tema: 'railane',
 
   // Opcional: troca as cores do tema. Use o formato '#RRGGBB'.
   // O build confere se o texto continua fácil de ler (contraste) e avisa se não estiver.
