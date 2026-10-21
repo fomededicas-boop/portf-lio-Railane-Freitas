@@ -50,12 +50,13 @@ export const TEMAS = {
     fundo: '#F4F5F1', texto: '#0E2219', destaque: '#006437', titulo: 'barlowCondensed', corpo: 'barlow',
     peso: 700, caixa: 'uppercase', espacamento: '0.005em', raio: '4px', escala: 1.2, letra: 0.5, topoNaCampanha: true, corDoTopo: '#006437',
   },
-  // Identidade visual da Railane: topo em degradê terracota (o degradê está em Base.astro),
+  // Identidade visual da Railane: topo em degradê entre o laranja e o terracota, com texto branco
+  // (o degradê está em Base.astro),
   // fundo creme (#E8DED3 clareado), fio verde (#6F7F6A) e rosa (#A86D6D) embaixo do topo e o
   // laranja (#E75C16) só num detalhe do selo. Verde, rosa e laranja não passam no contraste como texto.
   railane: {
-    fundo: '#F6F2ED', texto: '#1F1A17', destaque: '#A34E30', titulo: 'dmSerif', corpo: 'dmSans',
-    peso: 400, caixa: 'none', espacamento: '-0.01em', raio: '14px', escala: 0.95, letra: 0.6, topoNaCampanha: false, corDoTopo: '#A34E30',
+    fundo: '#F6F2ED', texto: '#1F1A17', destaque: '#B44F27', titulo: 'dmSerif', corpo: 'dmSans',
+    peso: 400, caixa: 'none', espacamento: '-0.01em', raio: '14px', escala: 0.95, letra: 0.6, topoNaCampanha: false, corDoTopo: '#BE5428',
   },
 } as const satisfies Record<
   string,

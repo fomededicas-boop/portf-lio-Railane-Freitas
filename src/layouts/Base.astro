@@ -51,7 +51,7 @@ const pessoa = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: c.topo.nome,
-  jobTitle: 'Creator de UGC',
+  jobTitle: c.topo.funcao,
   description: descricaoDaPagina,
   url: `${base}/`,
   image: `${base}/og.png`,
@@ -84,7 +84,7 @@ const nomesDosTemas: Record<string, string> = { revista: 'Revista', noite: 'Noit
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={`${c.topo.nome}, creator UGC`} />
+    <meta property="og:image:alt" content={`${c.topo.nome}, ${c.topo.funcao}`} />
     <meta name="twitter:card" content="summary_large_image" />
     <script type="application/ld+json" set:html={JSON.stringify(pessoa).replaceAll('<', '\\u003c')} />
 
@@ -218,10 +218,11 @@ const nomesDosTemas: Record<string, string> = { revista: 'Revista', noite: 'Noit
     border-bottom: 4px solid #c9a956;
   }
 
-  /* Railane: topo em degradê terracota (o texto creme passa em 4,5:1 em todos os tons), fio verde
-     e rosa embaixo dele, e a foto em arco com forma verde, contorno creme e um selo girando. */
+  /* Railane: topo em degradê entre o laranja e o terracota (o texto branco passa em 4,5:1 em
+     todos os tons), fio verde e rosa embaixo dele, e a foto em arco com forma verde, contorno
+     creme e um selo girando. */
   html[data-tema='railane'] .topo {
-    background: linear-gradient(150deg, #a34e30 0%, #9a5450 55%, #7e4a3e 100%);
+    background: linear-gradient(150deg, #be5428 0%, #b44f27 50%, #a9553a 100%);
     border-bottom: 6px solid;
     border-image: linear-gradient(to right, #6f7f6a 0 50%, #a86d6d 50% 100%) 1;
   }

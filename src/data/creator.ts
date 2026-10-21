@@ -66,6 +66,8 @@ export default defineCreator({
     fotoDescricao: 'Railane sorrindo, de blusa terracota, com as mãos na frente do corpo',
     // Seu nicho em uma linha. Aparece em letras pequenas acima do nome.
     nicho: 'Lifestyle, Casa & Decor, gastronomia',
+    // O que você faz, em poucas palavras. Aparece no alto do topo, no selo da foto e no título da aba.
+    funcao: 'Creator UGC & Influencer',
     // Bio curta: 2 ou 3 frases sobre o que você cria.
     bio: 'Creator que transforma produto em experiência e trata cada entrega como uma história de marca.',
     botao: {

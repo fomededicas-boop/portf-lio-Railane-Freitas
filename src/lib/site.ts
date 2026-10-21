@@ -190,7 +190,7 @@ export const linkPrincipal = linkDeContato(c.topo.botao.abre)!;
 
 const resumir = (texto: string, limite: number) =>
   texto.length <= limite ? texto : texto.slice(0, texto.lastIndexOf(' ', limite - 1)).replace(/[,.;:]$/, '') + '…';
-export const tituloDaPagina = c.seo.titulo || `${c.topo.nome} · Creator UGC · ${c.topo.nicho}`;
+export const tituloDaPagina = c.seo.titulo || `${c.topo.nome} · ${c.topo.funcao} · ${c.topo.nicho}`;
 export const descricaoDaPagina = resumir(c.seo.descricao || c.topo.bio, 160);
 
 /** 5511987654321 → +55 11 98765-4321 */
