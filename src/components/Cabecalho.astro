@@ -4,13 +4,15 @@ interface Props {
   rotulo?: string;
   titulo: string;
   id: string;
+  /** Título com moldura na cor de destaque (ex.: Feedbacks). */
+  moldura?: boolean;
 }
-const { rotulo, titulo, id } = Astro.props;
+const { rotulo, titulo, id, moldura = false } = Astro.props;
 ---
 
 <header class="cabecalho">
   {rotulo && <p class="kicker">{rotulo}</p>}
-  <h2 id={id}>{titulo}</h2>
+  <h2 id={id} class:list={{ 'titulo-moldura': moldura }}>{titulo}</h2>
 </header>
 
 <style>

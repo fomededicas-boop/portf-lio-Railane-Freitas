@@ -379,7 +379,7 @@ export default defineCreator({
   // Deixe vazio ('') o que você não quiser mostrar.
   contato: {
     titulo: 'Vamos criar juntos?',
-    texto: 'Me conte o produto, o prazo e onde o vídeo vai rodar. Respondo em até um dia útil.',
+    // Opcional: uma frase embaixo do título, ex.: texto: 'Respondo em até um dia útil.',
     // Opcional: uma foto sua ao lado dos contatos (arquivo em src/imagens).
     foto: 'vamos-criar-juntos.png',
     fotoDescricao: 'Railane olhando para trás por cima do ombro, sorrindo, de blusa listrada',

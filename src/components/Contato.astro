@@ -22,7 +22,6 @@ const canais = [
     )
   }
   <div class="conteudo">
-    <p class="kicker">Contato</p>
     <h2 id="contato-titulo">{titulo}</h2>
     {texto && <p class="texto">{texto}</p>}
     <ul class="canais">
@@ -42,11 +41,7 @@ const canais = [
 </section>
 
 <style>
-  .kicker {
-    color: var(--suave);
-  }
   h2 {
-    margin-top: 0.6rem;
     font-size: calc(clamp(2.25rem, 7vw, 4.25rem) * var(--escala));
     line-height: 1;
   }
@@ -55,7 +50,6 @@ const canais = [
     margin-top: 1.25rem;
   }
   @media (max-width: 759px) {
-    .kicker,
     h2 {
       text-align: center;
     }

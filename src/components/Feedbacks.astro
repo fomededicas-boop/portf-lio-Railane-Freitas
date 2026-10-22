@@ -14,11 +14,11 @@ const separar = grupos.length > 1;
 ---
 
 <section class="secao recuo" id="feedbacks" aria-labelledby="feedbacks-titulo">
-  <Cabecalho titulo={f.titulo} id="feedbacks-titulo" />
+  <Cabecalho titulo={f.titulo} id="feedbacks-titulo" moldura />
   {
     grupos.map((g) => (
       <div class="grupo">
-        {separar && <h3>{g.titulo}</h3>}
+        {separar && <h3 class="titulo-moldura">{g.titulo}</h3>}
         <ul class="mural">
           {g.itens.map((item, i) => (
             <li class="print anima" style={`--i:${i}`}>

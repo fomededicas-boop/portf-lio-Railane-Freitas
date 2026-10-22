@@ -291,6 +291,20 @@ const nomesDosTemas: Record<string, string> = { revista: 'Revista', noite: 'Noit
   }
 
   /* Peças usadas em várias seções */
+  /* Título com moldura: contorno na cor de destaque e uma sombra clara deslocada. */
+  .titulo-moldura {
+    width: fit-content;
+    padding: 0.3em 0.95em 0.38em;
+    border: 2px solid var(--destaque);
+    border-radius: 999px;
+    color: var(--destaque);
+    box-shadow: 5px 5px 0 color-mix(in srgb, var(--destaque) 22%, transparent);
+  }
+  @media (max-width: 759px) {
+    .titulo-moldura {
+      margin-inline: auto;
+    }
+  }
   .recuo {
     width: min(100% - 2 * clamp(1rem, 5vw, 3rem), 76rem);
     margin-inline: auto;

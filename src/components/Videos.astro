@@ -41,7 +41,7 @@ const porNicho = lista.length >= 2;
     lista.map((g) => (
       <div class="grupo" id={porNicho ? `nicho-${g.chave}` : undefined}>
         {porNicho && (
-          <h3>{g.nome}</h3>
+          <h3 class="titulo-moldura">{g.nome}</h3>
         )}
         <ul class="grade">
           {g.videos.map((video) => (
@@ -102,11 +102,8 @@ const porNicho = lista.length >= 2;
     margin-top: 1.75rem;
   }
   h3 {
-    display: flex;
-    align-items: baseline;
-    gap: 0.6rem;
-    margin-bottom: 1rem;
-    font-size: calc(clamp(1.4rem, 3.5vw, 1.9rem) * var(--escala));
+    margin-bottom: 1.1rem;
+    font-size: calc(clamp(1.3rem, 3.2vw, 1.7rem) * var(--escala));
   }
   .grade {
     display: grid;
@@ -117,9 +114,6 @@ const porNicho = lista.length >= 2;
     .texto {
       margin-inline: auto;
       text-align: center;
-    }
-    h3 {
-      justify-content: center;
     }
     /* Celular: os nichos numa linha só, que desliza para o lado, de ponta a ponta da tela. */
     .atalhos {
