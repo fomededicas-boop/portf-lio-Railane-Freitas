@@ -326,6 +326,41 @@ export default defineCreator({
     ],
   },
 
+  // ── GALERIA DE FOTOS ───────────────────────────────────────────────────────
+  // Fotos em molduras de polaroid. Os arquivos ficam em src/imagens/galeria.
+  // A ordem aqui é a ordem no site. Opcional em cada foto: legenda (escrita embaixo da
+  // polaroid) e descricao (o que aparece na foto, lido em voz alta para pessoas cegas).
+  galeria: {
+    mostrar: true,
+    titulo: 'Galeria de fotos',
+    fotos: [
+      { foto: 'galeria/galeria-01.jpg' },
+      { foto: 'galeria/galeria-02.jpg' },
+      { foto: 'galeria/galeria-03.jpg' },
+      { foto: 'galeria/galeria-04.jpg' },
+      { foto: 'galeria/galeria-05.jpg' },
+      { foto: 'galeria/galeria-06.jpg' },
+      { foto: 'galeria/galeria-07.jpg' },
+      { foto: 'galeria/galeria-08.jpg' },
+      { foto: 'galeria/galeria-09.jpg' },
+      { foto: 'galeria/galeria-10.jpg' },
+      { foto: 'galeria/galeria-11.jpg' },
+      { foto: 'galeria/galeria-12.jpg' },
+      { foto: 'galeria/galeria-13.jpg' },
+      { foto: 'galeria/galeria-14.jpg' },
+      { foto: 'galeria/galeria-15.jpg' },
+      { foto: 'galeria/galeria-16.jpg' },
+      { foto: 'galeria/galeria-17.jpg' },
+      { foto: 'galeria/galeria-18.jpg' },
+      { foto: 'galeria/galeria-19.jpg' },
+      { foto: 'galeria/galeria-20.jpg' },
+      { foto: 'galeria/galeria-21.jpg' },
+      { foto: 'galeria/galeria-22.jpg' },
+      { foto: 'galeria/galeria-23.jpg' },
+      { foto: 'galeria/galeria-24.jpg' },
+    ],
+  },
+
   // ── RESULTADOS ─────────────────────────────────────────────────────────────
   // Opcional. Use só números e depoimentos reais, que você consegue provar.
   // Cada lista pode ficar vazia [] e aquela parte some.

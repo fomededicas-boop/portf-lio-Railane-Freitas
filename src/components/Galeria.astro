@@ -1,0 +1,241 @@
+---
+// Galeria de fotos em polaroids: moldura branca com a borda de baixo larga, cada uma levemente
+// torta e presa com fita. Ao tocar, a foto abre grande na tela (com setas para a próxima).
+import { Image, getImage } from 'astro:assets';
+import Cabecalho from './Cabecalho.astro';
+import { c } from '../lib/site';
+
+const g = c.galeria!;
+const fotos = await Promise.all(
+  g.fotos.map(async (f, i) => ({
+    ...f,
+    alt: f.descricao ?? `Foto ${i + 1} da galeria de ${c.topo.nome}`,
+    grande: (await getImage({ src: f.foto, width: Math.min(1200, f.foto.width), format: 'webp' })).src,
+  })),
+);
+---
+
+<section class="secao recuo" id="galeria" aria-labelledby="galeria-titulo">
+  <Cabecalho titulo={g.titulo} id="galeria-titulo" moldura />
+  <ul class="polaroids">
+    {
+      fotos.map((f, i) => (
+        <li class="polaroid anima" style={`--i:${i % 8}`}>
+          <a href={f.grande} data-indice={i} aria-label={`Ampliar: ${f.alt}`}>
+            <Image src={f.foto} alt={f.alt} width={360} densities={[1, 2]} loading="lazy" />
+          </a>
+          {f.legenda && <p class="legenda">{f.legenda}</p>}
+        </li>
+      ))
+    }
+  </ul>
+
+  <dialog class="ampliada" aria-label="Foto ampliada">
+    <img alt="" />
+    <button class="fechar" type="button" aria-label="Fechar">×</button>
+    <button class="anterior" type="button" aria-label="Foto anterior">‹</button>
+    <button class="proxima" type="button" aria-label="Próxima foto">›</button>
+  </dialog>
+</section>
+
+<script>
+  const secao = document.querySelector<HTMLElement>('#galeria');
+  if (secao) {
+    // Entrada: as polaroids aparecem uma a uma. Sem JavaScript, tudo já aparece parado.
+    if ('IntersectionObserver' in window) {
+      secao.classList.add('animar');
+      const observador = new IntersectionObserver(
+        (entradas) => {
+          for (const e of entradas)
+            if (e.isIntersecting) {
+              e.target.classList.add('visivel');
+              observador.unobserve(e.target);
+            }
+        },
+        { threshold: 0.15 },
+      );
+      secao.querySelectorAll('.anima').forEach((el) => observador.observe(el));
+    }
+
+    // Foto ampliada. Sem JavaScript, o link abre a foto grande sozinha.
+    const links = [...secao.querySelectorAll<HTMLAnchorElement>('.polaroid a')];
+    const dialogo = secao.querySelector<HTMLDialogElement>('.ampliada')!;
+    const img = dialogo.querySelector('img')!;
+    let atual = 0;
+    const mostrar = (i: number) => {
+      atual = (i + links.length) % links.length;
+      img.src = links[atual].href;
+      img.alt = links[atual].querySelector('img')!.alt;
+    };
+    links.forEach((a, i) =>
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        mostrar(i);
+        dialogo.showModal();
+      }),
+    );
+    dialogo.querySelector('.fechar')!.addEventListener('click', () => dialogo.close());
+    dialogo.querySelector('.anterior')!.addEventListener('click', () => mostrar(atual - 1));
+    dialogo.querySelector('.proxima')!.addEventListener('click', () => mostrar(atual + 1));
+    // Toque fora da foto fecha; setas do teclado passam as fotos.
+    dialogo.addEventListener('click', (e) => {
+      if (e.target === dialogo) dialogo.close();
+    });
+    dialogo.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') mostrar(atual - 1);
+      if (e.key === 'ArrowRight') mostrar(atual + 1);
+    });
+  }
+</script>
+
+<style>
+  .polaroids {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.6rem 1rem;
+    padding-top: 0.6rem;
+  }
+  /* Moldura de polaroid: branca, com a borda de baixo mais larga, levemente torta. */
+  .polaroid {
+    position: relative;
+    padding: 0.55rem 0.55rem 2.1rem;
+    background: #fff;
+    box-shadow: 0 8px 20px rgb(60 40 30 / 0.14);
+    rotate: -2deg;
+    transition:
+      rotate 0.25s ease,
+      scale 0.25s ease;
+  }
+  .polaroid:nth-child(even) {
+    rotate: 2deg;
+  }
+  .polaroid:nth-child(3n) {
+    rotate: -1deg;
+  }
+  .polaroid:nth-child(5n) {
+    rotate: 1.2deg;
+  }
+  .polaroid:hover {
+    z-index: 1;
+    rotate: 0deg;
+    scale: 1.03;
+  }
+  /* Fita adesiva em cima, verde e rosa alternando. */
+  .polaroid::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    top: -0.65rem;
+    left: 50%;
+    width: 3.4rem;
+    height: 1.1rem;
+    background: rgb(111 127 106 / 0.6);
+    transform: translateX(-50%) rotate(-4deg);
+  }
+  .polaroid:nth-child(even)::before {
+    background: rgb(168 109 109 / 0.55);
+    transform: translateX(-50%) rotate(3deg);
+  }
+  .polaroid a {
+    display: block;
+    cursor: zoom-in;
+  }
+  .polaroid :global(img) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+  .legenda {
+    position: absolute;
+    right: 0.55rem;
+    bottom: 0.45rem;
+    left: 0.55rem;
+    overflow: hidden;
+    font-family: var(--f-titulo);
+    font-style: italic;
+    font-size: 0.95rem;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #1f1a17;
+  }
+
+  /* Entrada: cada polaroid sobe e aparece (o atraso vem de --i). */
+  .animar .anima {
+    opacity: 0;
+    translate: 0 18px;
+    transition:
+      opacity 0.5s ease,
+      translate 0.5s ease,
+      rotate 0.25s ease,
+      scale 0.25s ease;
+    transition-delay: calc(var(--i) * 60ms), calc(var(--i) * 60ms), 0s, 0s;
+  }
+  .animar .anima.visivel {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  /* Foto ampliada. */
+  .ampliada {
+    max-width: none;
+    max-height: none;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+  .ampliada::backdrop {
+    background: rgb(20 15 12 / 0.88);
+  }
+  .ampliada[open] {
+    display: grid;
+    place-items: center;
+  }
+  .ampliada img {
+    max-width: min(92vw, 40rem);
+    max-height: 86vh;
+    border: 0.5rem solid #fff;
+    border-bottom-width: 1.75rem;
+    box-shadow: 0 16px 40px rgb(0 0 0 / 0.4);
+  }
+  .ampliada button {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 0;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.92);
+    color: #1f1a17;
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .fechar {
+    top: 1rem;
+    right: 1rem;
+  }
+  .anterior,
+  .proxima {
+    top: 50%;
+    translate: 0 -50%;
+  }
+  .anterior {
+    left: 0.75rem;
+  }
+  .proxima {
+    right: 0.75rem;
+  }
+
+  @media (min-width: 760px) {
+    .polaroids {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 2.25rem 1.6rem;
+    }
+  }
+</style>

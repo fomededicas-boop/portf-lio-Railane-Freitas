@@ -196,6 +196,12 @@ export const esquema = z
         .default([]),
     }),
 
+    galeria: secao('Galeria de fotos', {
+      fotos: z
+        .array(z.strictObject({ foto: imagem('da {item}'), legenda: opcional, descricao: opcional }))
+        .default([]),
+    }),
+
     resultados: secao('Resultados', {
       numeros: z.array(z.strictObject({ valor: texto('faltou o valor do {item} (ex.: "1,2 mi")'), legenda: texto('faltou a legenda do {item}') })).default([]),
       prints: z.array(z.strictObject({ imagem: imagem('do print'), legenda: texto('faltou a legenda do {item}') })).default([]),
@@ -273,12 +279,12 @@ export type Conteudo = z.output<typeof esquema>;
 const SECOES: Record<string, string> = {
   modoExemplo: 'Modo exemplo', endereco: 'Endereço do site', modoDosVideos: 'Modo dos vídeos', urlDosVideos: 'URL dos vídeos',
   tema: 'Tema', cores: 'Cores',
-  topo: 'Topo', videos: 'Vídeos', campanha: 'Campanha', diferenciais: 'Diferenciais', marcas: 'Marcas', sobre: 'Sobre', feedbacks: 'Feedbacks',
+  topo: 'Topo', videos: 'Vídeos', campanha: 'Campanha', diferenciais: 'Diferenciais', marcas: 'Marcas', sobre: 'Sobre', feedbacks: 'Feedbacks', galeria: 'Galeria',
   resultados: 'Resultados', comoTrabalho: 'Como trabalho', valores: 'Valores', contato: 'Contato', seo: 'SEO',
 };
 const ITENS: Record<string, string> = {
   'videos.lista': 'vídeo', 'diferenciais.lista': 'diferencial', 'marcas.lista': 'marca',
-  'sobre.fatos': 'fato', 'sobre.softSkills': 'soft skill', 'sobre.hardSkills': 'hard skill', 'feedbacks.lista': 'feedback',
+  'sobre.fatos': 'fato', 'sobre.softSkills': 'soft skill', 'sobre.hardSkills': 'hard skill', 'feedbacks.lista': 'feedback', 'galeria.fotos': 'foto da galeria',
   'resultados.numeros': 'número', 'resultados.prints': 'print', 'resultados.depoimentos': 'depoimento',
   'comoTrabalho.incluso': 'item do "incluso"', 'valores.pacotes': 'pacote', 'valores.avulsos': 'item avulso',
 };
