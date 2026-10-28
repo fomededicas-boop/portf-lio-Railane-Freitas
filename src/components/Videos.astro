@@ -30,7 +30,9 @@ const porNicho = lista.length >= 2;
         <ul>
           {lista.map((g) => (
             <li>
-              <a href={`#nicho-${g.chave}`}>{g.nome}</a>
+              <a href={`#nicho-${g.chave}`} data-evento="Atalho de nicho" data-evento-nicho={g.nome}>
+                {g.nome}
+              </a>
             </li>
           ))}
         </ul>

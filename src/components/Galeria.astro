@@ -21,7 +21,13 @@ const fotos = await Promise.all(
     {
       fotos.map((f, i) => (
         <li class="polaroid anima" style={`--i:${i % 8}`}>
-          <a href={f.grande} data-indice={i} aria-label={`Ampliar: ${f.alt}`}>
+          <a
+            href={f.grande}
+            data-indice={i}
+            aria-label={`Ampliar: ${f.alt}`}
+            data-evento="Foto ampliada"
+            data-evento-foto={f.legenda ?? `Foto ${i + 1}`}
+          >
             <Image src={f.foto} alt={f.alt} width={360} densities={[1, 2]} loading="lazy" />
           </a>
           {f.legenda && <p class="legenda">{f.legenda}</p>}

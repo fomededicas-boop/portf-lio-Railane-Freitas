@@ -28,7 +28,13 @@ const canais = [
       {
         canais.map((canal) => (
           <li>
-            <a href={canal.href} {...(canal.fora ? { target: '_blank', rel: 'noopener' } : {})}>
+            <a
+              href={canal.href}
+              {...(canal.fora ? { target: '_blank', rel: 'noopener' } : {})}
+              data-evento="Contato"
+              data-evento-canal={canal.rede}
+              data-evento-local="rodapé"
+            >
               <span class="rede">{canal.rede}</span>
               <span class="valor">{canal.valor}</span>
               <span class="seta" aria-hidden="true">↗</span>

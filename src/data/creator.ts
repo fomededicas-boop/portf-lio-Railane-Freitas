@@ -434,4 +434,12 @@ export default defineCreator({
     titulo: '',
     descricao: '',
   },
+
+  // ── ESTATÍSTICAS ───────────────────────────────────────────────────────────
+  // Opcional. Código do site no Umami (cloud.umami.is > Settings > Websites > Website ID).
+  // Com ele preenchido, o painel do Umami mostra as visitas, de onde vieram, e quais vídeos,
+  // nichos e botões foram mais clicados. Vazio = o site não envia nada.
+  estatisticas: {
+    umami: '7b2ebe9d-1d8d-4b35-8ec1-3905fe7266bc',
+  },
 });

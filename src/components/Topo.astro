@@ -50,7 +50,7 @@ const redes = [
   <div class="intro">
     <p class="bio">{c.topo.bio}</p>
     <div class="acoes">
-      <a class="botao" href={linkPrincipal}>{c.topo.botao.texto} <span aria-hidden="true">→</span></a>
+      <a class="botao" href={linkPrincipal} data-evento="Botão principal" data-evento-local="capa">{c.topo.botao.texto} <span aria-hidden="true">→</span></a>
       {temVideos && <a class="ver" href="#videos">Ver meu trabalho <span aria-hidden="true">↓</span></a>}
     </div>
     {
@@ -58,7 +58,16 @@ const redes = [
         <ul class="redes">
           {redes.map((r) => (
             <li>
-              <a href={r.link} target="_blank" rel="noopener noreferrer" aria-label={`${r.nome} de ${c.topo.nome}`} title={r.nome}>
+              <a
+                href={r.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${r.nome} de ${c.topo.nome}`}
+                title={r.nome}
+                data-evento="Contato"
+                data-evento-canal={r.nome}
+                data-evento-local="capa"
+              >
                 <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
                   <path d={r.icone.path} fill="currentColor" />
                 </svg>

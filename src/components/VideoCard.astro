@@ -10,7 +10,7 @@ const descricao = `${video.formato} para ${video.marca}, ${video.duracao}`;
 const previa = !!c.videos?.previaAutomatica;
 ---
 
-<figure class="video">
+<figure class="video" data-marca={video.marca} data-nicho={video.nicho ?? ''} data-formato={video.formato}>
   <video
     preload="none"
     poster={urlDoArquivo(video.capa)}
@@ -101,7 +101,14 @@ const previa = !!c.videos?.previaAutomatica;
   document.addEventListener('click', (evento) => {
     const botao = (evento.target as Element).closest('.tocar');
     if (!botao) return;
-    const v = botao.closest('.video')!.querySelector('video')!;
+    const card = botao.closest<HTMLElement>('.video')!;
+    const v = card.querySelector('video')!;
+    // Estatísticas: conta o play com a marca, o nicho e o formato (só se o Umami estiver ligado).
+    (window as Window & { umami?: { track: (nome: string, dados: object) => void } }).umami?.track('Play de vídeo', {
+      marca: card.dataset.marca,
+      nicho: card.dataset.nicho || 'Sem nicho',
+      formato: card.dataset.formato,
+    });
     for (const outro of videos)
       if (outro !== v && !outro.muted) {
         outro.pause();

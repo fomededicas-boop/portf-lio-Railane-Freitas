@@ -88,6 +88,19 @@ const nomesDosTemas: Record<string, string> = { revista: 'Revista', noite: 'Noit
     <meta name="twitter:card" content="summary_large_image" />
     <script type="application/ld+json" set:html={JSON.stringify(pessoa).replaceAll('<', '\\u003c')} />
 
+    {
+      /* Estatísticas (Umami): sem cookies. Só conta no endereço publicado (data-domains), não no
+         computador nem nas páginas de comparar temas. */
+      c.estatisticas.umami && indexar && endereco && (
+        <script
+          is:inline
+          defer
+          src="https://cloud.umami.is/script.js"
+          data-website-id={c.estatisticas.umami}
+          data-domains={new URL(endereco).hostname}
+        />
+      )
+    }
     <Font cssVariable={fontes.titulo.variavel as any} preload={preloadTitulo} />
     <Font cssVariable={fontes.corpo.variavel as any} preload={[{ weight: 400, style: 'normal' }]} />
   </head>
@@ -109,6 +122,22 @@ const nomesDosTemas: Record<string, string> = { revista: 'Revista', noite: 'Noit
       )
     }
     <slot />
+    <script>
+      // Estatísticas de cliques: todo elemento com data-evento="Nome" conta um evento no Umami,
+      // com os detalhes de data-evento-* (ex.: data-evento-nicho="Tech" → nicho: Tech).
+      // Não muda o que o link faz; sem o Umami carregado (código vazio), não faz nada.
+      document.addEventListener('click', (e) => {
+        const alvo = (e.target as Element).closest<HTMLElement>('[data-evento]');
+        const umami = (window as Window & { umami?: { track: (nome: string, dados: object) => void } }).umami;
+        if (!alvo || !umami) return;
+        const dados = Object.fromEntries(
+          Object.entries(alvo.dataset)
+            .filter(([chave]) => chave.startsWith('evento') && chave !== 'evento')
+            .map(([chave, valor]) => [chave.slice(6).toLowerCase(), valor]),
+        );
+        umami.track(alvo.dataset.evento!, dados);
+      });
+    </script>
   </body>
 </html>
 

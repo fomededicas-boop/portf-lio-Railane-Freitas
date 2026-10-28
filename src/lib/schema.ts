@@ -254,6 +254,17 @@ export const esquema = z
     }),
 
     seo: z.strictObject({ titulo: opcional, descricao: opcional }).default({}),
+    estatisticas: z
+      .strictObject({
+        umami: z
+          .string(erro('', 'o código do Umami precisa estar entre aspas'))
+          .trim()
+          .regex(/^$|^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i, {
+            error: 'o código do Umami (Website ID) parece errado: ele tem o formato "a1b2c3d4-e5f6-7890-abcd-ef1234567890"',
+          })
+          .default(''),
+      })
+      .default({ umami: '' }),
   })
   .superRefine((c, ctx) => {
     if (c.modoDosVideos === 'r2' && !/^https:\/\/\S+$/.test(c.urlDosVideos))
@@ -280,7 +291,7 @@ const SECOES: Record<string, string> = {
   modoExemplo: 'Modo exemplo', endereco: 'Endereço do site', modoDosVideos: 'Modo dos vídeos', urlDosVideos: 'URL dos vídeos',
   tema: 'Tema', cores: 'Cores',
   topo: 'Topo', videos: 'Vídeos', campanha: 'Campanha', diferenciais: 'Diferenciais', marcas: 'Marcas', sobre: 'Sobre', feedbacks: 'Feedbacks', galeria: 'Galeria',
-  resultados: 'Resultados', comoTrabalho: 'Como trabalho', valores: 'Valores', contato: 'Contato', seo: 'SEO',
+  resultados: 'Resultados', comoTrabalho: 'Como trabalho', valores: 'Valores', contato: 'Contato', seo: 'SEO', estatisticas: 'Estatísticas',
 };
 const ITENS: Record<string, string> = {
   'videos.lista': 'vídeo', 'diferenciais.lista': 'diferencial', 'marcas.lista': 'marca',
