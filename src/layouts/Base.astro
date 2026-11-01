@@ -256,23 +256,26 @@ const nomesDosTemas: Record<string, string> = { revista: 'Revista', noite: 'Noit
   /* Railane: topo em degradê entre o laranja e o terracota (o texto branco passa em 4,5:1 em
      todos os tons), fio verde e rosa embaixo dele, e a foto em arco com forma verde, contorno
      creme e um selo girando. */
-  /* Textura de journal: granulado de papel (ruído em SVG) e pautas de caderno bem apagadas.
-     Fica atrás de tudo e é tão leve que não muda o contraste do texto. */
+  /* Textura de papel levemente amassado: vincos com luz e sombra (relevo em SVG) e um granulado
+     fino. Fica atrás de tudo e é leve o bastante para não mudar o contraste do texto. */
   html[data-tema='railane'] {
     --papel: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .27 0 0 0 0 .2 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    --amassado: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700'%3E%3Cfilter id='a' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.007 .011' numOctaves='5' seed='7' stitchTiles='stitch'/%3E%3CfeDiffuseLighting lighting-color='%23fff' surfaceScale='4'%3E%3CfeDistantLight azimuth='225' elevation='55'/%3E%3C/feDiffuseLighting%3E%3CfeColorMatrix values='0 0 0 0 .22 0 0 0 0 .15 0 0 0 0 .1 -0.7 0 0 0 0.58'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
+    --amassado-sombra: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700'%3E%3Cfilter id='a' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.007 .011' numOctaves='5' seed='7' stitchTiles='stitch'/%3E%3CfeDiffuseLighting lighting-color='%23fff' surfaceScale='4'%3E%3CfeDistantLight azimuth='225' elevation='55'/%3E%3C/feDiffuseLighting%3E%3CfeColorMatrix values='0 0 0 0 0.18 0 0 0 0 0.1 0 0 0 0 0.06 -1.9 0 0 0 1.58'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
+    --amassado-brilho: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700'%3E%3Cfilter id='a' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.007 .011' numOctaves='5' seed='7' stitchTiles='stitch'/%3E%3CfeDiffuseLighting lighting-color='%23fff' surfaceScale='4'%3E%3CfeDistantLight azimuth='225' elevation='55'/%3E%3C/feDiffuseLighting%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 0.95 0 0 0 0 0.88 1.7 0 0 0 -1.42'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
   }
   html[data-tema='railane'] body {
     background:
       var(--papel),
-      repeating-linear-gradient(to bottom, transparent 0 33px, rgb(111 127 106 / 0.09) 33px 34px),
+      var(--amassado),
       var(--fundo);
   }
-  /* Na capa a textura é mais marcada: granulado mais forte e pautas em creme sobre o terracota. */
+  /* Na capa o papel amassado aparece mais: sombra e brilho dos vincos, como relevo de papel. */
   html[data-tema='railane'] .topo {
-    --papel-forte: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .2 0 0 0 0 .12 0 0 0 0 .08 0 0 0 .32 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     background:
-      var(--papel-forte),
-      repeating-linear-gradient(to bottom, transparent 0 33px, rgb(255 244 232 / 0.13) 33px 34px),
+      var(--papel),
+      var(--amassado-brilho),
+      var(--amassado-sombra),
       linear-gradient(150deg, #be5428 0%, #b44f27 50%, #a9553a 100%);
     border-bottom: 6px solid;
     border-image: linear-gradient(to right, #6f7f6a 0 50%, #a86d6d 50% 100%) 1;
