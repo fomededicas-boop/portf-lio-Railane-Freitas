@@ -267,9 +267,12 @@ const nomesDosTemas: Record<string, string> = { revista: 'Revista', noite: 'Noit
       repeating-linear-gradient(to bottom, transparent 0 33px, rgb(111 127 106 / 0.09) 33px 34px),
       var(--fundo);
   }
+  /* Na capa a textura é mais marcada: granulado mais forte e pautas em creme sobre o terracota. */
   html[data-tema='railane'] .topo {
+    --papel-forte: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .2 0 0 0 0 .12 0 0 0 0 .08 0 0 0 .32 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     background:
-      var(--papel),
+      var(--papel-forte),
+      repeating-linear-gradient(to bottom, transparent 0 33px, rgb(255 244 232 / 0.13) 33px 34px),
       linear-gradient(150deg, #be5428 0%, #b44f27 50%, #a9553a 100%);
     border-bottom: 6px solid;
     border-image: linear-gradient(to right, #6f7f6a 0 50%, #a86d6d 50% 100%) 1;
