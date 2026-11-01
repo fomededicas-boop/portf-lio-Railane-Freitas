@@ -256,8 +256,21 @@ const nomesDosTemas: Record<string, string> = { revista: 'Revista', noite: 'Noit
   /* Railane: topo em degradê entre o laranja e o terracota (o texto branco passa em 4,5:1 em
      todos os tons), fio verde e rosa embaixo dele, e a foto em arco com forma verde, contorno
      creme e um selo girando. */
+  /* Textura de journal: granulado de papel (ruído em SVG) e pautas de caderno bem apagadas.
+     Fica atrás de tudo e é tão leve que não muda o contraste do texto. */
+  html[data-tema='railane'] {
+    --papel: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .27 0 0 0 0 .2 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  html[data-tema='railane'] body {
+    background:
+      var(--papel),
+      repeating-linear-gradient(to bottom, transparent 0 33px, rgb(111 127 106 / 0.09) 33px 34px),
+      var(--fundo);
+  }
   html[data-tema='railane'] .topo {
-    background: linear-gradient(150deg, #be5428 0%, #b44f27 50%, #a9553a 100%);
+    background:
+      var(--papel),
+      linear-gradient(150deg, #be5428 0%, #b44f27 50%, #a9553a 100%);
     border-bottom: 6px solid;
     border-image: linear-gradient(to right, #6f7f6a 0 50%, #a86d6d 50% 100%) 1;
   }
